@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 
 export default function DashboardPage() {
@@ -6,7 +5,6 @@ export default function DashboardPage() {
     <>
       <h1>Dashboard page</h1>
       <p>This is a protected page.</p>
-      <UserButton />
       <Link to="/">Return to index</Link>
     </>
   );

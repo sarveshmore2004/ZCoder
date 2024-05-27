@@ -10,12 +10,15 @@ export default function RootLayout() {
           <div>
             <p>ZCoder</p>
           </div>
-          <SignedIn>
-            <UserButton afterSignOutUrl='/sign-in' />
-          </SignedIn>
-          <SignedOut>
-            <Link to="/sign-in">Sign In</Link>
-          </SignedOut>
+          <div>
+            <SignedOut>
+              <Link to='sign-in'>Sign In</Link>
+              <Link to='sign-up'>Sign Up</Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
         </div>
       </header>
       <main>
