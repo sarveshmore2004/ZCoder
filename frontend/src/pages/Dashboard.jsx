@@ -1,13 +1,13 @@
-import { UserButton } from '@clerk/clerk-react'
-import React from 'react'
+import { UserButton } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+export default function DashboardPage() {
   return (
-    <div>
-        <h1>Lets come on my page</h1>
-        <UserButton />
-    </div>
-  )
+    <>
+      <h1>Dashboard page</h1>
+      <p>This is a protected page.</p>
+      <UserButton />
+      <Link to="/">Return to index</Link>
+    </>
+  );
 }
-
-export default Dashboard
