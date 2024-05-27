@@ -16,6 +16,8 @@ export default function RootLayout() {
               <Link to='sign-up'>Sign Up</Link>
             </SignedOut>
             <SignedIn>
+              <Link to="profile">Profile</Link>
+              <Link to="/dashboard">Dashboard</Link>
               <UserButton />
             </SignedIn>
           </div>
