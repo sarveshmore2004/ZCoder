@@ -22,6 +22,8 @@ export default {
         tertiary: "#99a0a3",
         border: "#1a2e35",
         background: "#191b1c",
+        primary_text: "#cfcac4",
+        secondary_text: "#9e958a",
       },
       animation: {
         vote: "vote 1s ease-in-out",

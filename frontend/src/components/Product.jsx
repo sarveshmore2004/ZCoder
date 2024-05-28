@@ -8,30 +8,30 @@ const Product = () => {
 
   return (
     <section className={`bg-background py-8`} id="product">
-      <div className={`container w-10/12 mx-auto m-8`}>
+      <div className={`container w-10/12 mx-auto m-8 `}>
         <h1
-          className={`w-full my-2 text-5xl font-bold leading-tight text-center text-primary`}
+          className={`w-full my-2 mb-10 text-5xl font-bold leading-tight text-center text-primary`}
         >
           {product.title.split(" ").map((word, index) => (
             <span
               key={index}
-              className={index % 2 ? "text-primary" : "text-white"}
+              className={index % 2 ? "text-primary" : "text-primary_text"}
             >
               {word}{" "}
             </span>
           ))}
         </h1>
         {/* <Divider /> */}
-        <div className={`flex flex-wrap`}>
+        <div className={`flex flex-wrap justify-between`}>
           <div className={`w-5/6 sm:w-1/2 p-6 mt-20`}>
             <h3
-              className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
+              className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
             >
               {firstItem?.title}
             </h3>
-            <p className={`text-gray-600`}>{firstItem?.description}</p>
+            <p className={` text-secondary_text`}>{firstItem?.description}</p>
           </div>
-          <div className={`w-full sm:w-1/2 p-6`}>
+          <div className={` p-6`}>
             <img
               className=" max-h-80"
               src={firstItem?.img}
@@ -39,7 +39,9 @@ const Product = () => {
             />
           </div>
         </div>
-        <div className={`flex flex-wrap flex-col-reverse sm:flex-row`}>
+        <div
+          className={`flex flex-wrap flex-col-reverse sm:flex-row justify-between`}
+        >
           <div className={`w-full sm:w-1/2 p-6`}>
             <img
               className="max-h-80"
@@ -50,24 +52,26 @@ const Product = () => {
           <div className={`w-full sm:w-1/2 p-6 mt-20`}>
             <div className={`align-middle`}>
               <h3
-                className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
+                className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
               >
                 {secondItem?.title}
               </h3>
-              <p className={`text-gray-600 mb-8`}>{secondItem?.description}</p>
+              <p className={` text-secondary_text mb-8`}>
+                {secondItem?.description}
+              </p>
             </div>
           </div>
         </div>
-        <div className={`flex flex-wrap`}>
+        <div className={`flex flex-wrap justify-between`}>
           <div className={`w-5/6 sm:w-1/2 p-6 mt-20`}>
             <h3
-              className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
+              className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
             >
               {thirdItem?.title}
             </h3>
-            <p className={`text-gray-600`}>{thirdItem?.description}</p>
+            <p className={` text-secondary_text`}>{thirdItem?.description}</p>
           </div>
-          <div className={`w-full sm:w-1/2 p-6`}>
+          <div className={`p-6`}>
             <img
               className="max-h-80"
               src={thirdItem?.img}

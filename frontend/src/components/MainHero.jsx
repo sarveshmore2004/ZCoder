@@ -7,13 +7,15 @@ const MainHero = () => {
   return (
     <main className="mx-auto px-4 ">
       <div className="sm:text-center lg:text-left">
-        <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
+        <h1 className="text-3xl tracking-tight font-extrabold text-primary_text sm:text-5xl lg:text-6xl">
           <span className="block xl:inline">{mainHero.title}</span>{" "}
           <span className={`block text-primary xl:inline`}>
             {mainHero.subtitle}
           </span>
         </h1>
-        <p className="mt-3 text-base text-gray-500 ">{mainHero.description}</p>
+        <p className="mt-3 text-sm text-secondary_text sm:mt-5 sm:max-w-xl sm:mx-auto lg:mx-0  sm:text-xl lg:text-xl">
+          {mainHero.description}
+        </p>
         <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
           <div className="rounded-md shadow">
             <a
