@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 
 import config from "../config/index.json";
 import { Link } from "react-router-dom";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Menu = () => {
   const { navigation, company, callToAction } = config;
@@ -45,12 +45,13 @@ const Menu = () => {
               </Link>
             </div>
             <div className="rounded-md shadow">
-              <Link
+              {/* <Link
                 to="/profile"
                 className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md border-primary text-primary bg-background hover:bg-border hover:text-primary md:py-2 md:text-md md:px-5`}
               >
                 Profile
-              </Link>
+              </Link> */}
+              <UserButton userProfileUrl="/profile"/>
             </div>
           </ul>
         </SignedIn>
