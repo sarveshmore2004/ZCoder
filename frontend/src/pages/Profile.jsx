@@ -2,8 +2,10 @@ import React from "react";
 import { FiBookmark, FiMessageCircle } from "react-icons/fi";
 import { FaExternalLinkAlt, FaGithub, FaLinkedin } from "react-icons/fa";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate=useNavigate();
   const user = {
     name: "JohnDoe",
     avatar: "https://via.placeholder.com/150",
@@ -32,6 +34,10 @@ const Profile = () => {
     },
   };
 
+  const handleEdit = () => {
+    navigate('/edit')
+  }
+
   return (
     <>
     <div className=" w-full flex justify-center bg-background drop-shadow-2xl">
@@ -48,7 +54,7 @@ const Profile = () => {
           />
           <h2 className="text-xl font-semibold text-primary_text">{user.name}</h2>
           <p className="text-secondary_text text-center mt-2">{user.bio}</p>
-          <button className="mt-4 bg-primary text-white py-2 px-4 rounded-lg">
+          <button onClick={handleEdit} className="mt-4 bg-primary text-white py-2 px-4 rounded-lg">
             Edit Profile
           </button>
         </div>

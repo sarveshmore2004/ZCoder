@@ -16,6 +16,7 @@ import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import DashboardPage from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 // This is alternate method
 // const router = createBrowserRouter([
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
       <Route path="/sign-in/*" element={<SignInPage />} />
       <Route path="/sign-up/*" element={<SignUpPage />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/edit" element={<EditProfile />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>

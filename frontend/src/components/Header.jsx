@@ -45,13 +45,7 @@ const Header = () => {
               </Link>
             </div>
             <div className="rounded-md shadow ml-1 ">
-              {/* <Link
-                to="/profile"
-                className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md border-primary text-primary bg-background hover:bg-border hover:text-primary md:py-2 md:text-md md:px-5`}
-              >
-                Profile
-              </Link> */}
-              <UserButton userProfileUrl="/profile"/>
+              <UserButton afterSignOutUrl="/" userProfileUrl="/profile"/>
             </div>
           </ul>
         </SignedIn>
