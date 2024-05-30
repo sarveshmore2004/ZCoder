@@ -2,9 +2,10 @@ import React, { Fragment } from "react";
 
 import config from "../config/index.json";
 import { Link } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useAuth } from "@clerk/clerk-react";
 
 const Header = () => {
+  const {userId} = useAuth();
   const { navigation, company, callToAction } = config;
   const { name: companyName, logo } = company;
 
@@ -45,7 +46,7 @@ const Header = () => {
               </Link>
             </div>
             <div className="rounded-md shadow ml-1 ">
-              <UserButton afterSignOutUrl="/" userProfileUrl="/profile"/>
+              <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
             </div>
           </ul>
         </SignedIn>

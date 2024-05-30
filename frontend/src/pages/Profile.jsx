@@ -2,10 +2,12 @@ import React from "react";
 import { FiBookmark, FiMessageCircle } from "react-icons/fi";
 import { FaExternalLinkAlt, FaGithub, FaLinkedin } from "react-icons/fa";
 import Header from "../components/Header";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
 const Profile = () => {
   const navigate=useNavigate();
+  const {userId}=useAuth();
   const user = {
     name: "JohnDoe",
     avatar: "https://via.placeholder.com/150",
@@ -35,7 +37,7 @@ const Profile = () => {
   };
 
   const handleEdit = () => {
-    navigate('/edit')
+    navigate(`/${userId}/edit`)
   }
 
   return (

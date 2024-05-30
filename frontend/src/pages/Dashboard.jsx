@@ -2,6 +2,7 @@ import React from "react";
 import { FiBookmark, FiMessageCircle, FiFilter, FiThumbsUp } from "react-icons/fi";
 import { FaSort, FaHome, FaQuestionCircle, FaTags, FaUsers, FaPlus, FaEye } from "react-icons/fa";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
 
 const DashboardPage = () => {
   const blogs = [
@@ -37,18 +38,18 @@ const DashboardPage = () => {
         {/* Sidebar */}
         <div className="w-full lg:w-1/6 bg-background p-4 rounded-lg shadow-lg mb-4 lg:mb-0">
           <nav className="flex flex-col space-y-4">
-            <a href="#" className="flex items-center text-secondary_text hover:text-primary">
+            <Link to="/" className="flex items-center text-secondary_text hover:text-primary">
               <FaHome className="mr-2" /> Home
-            </a>
-            <a href="#" className="flex items-center text-secondary_text hover:text-primary">
+            </Link>
+            <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
               <FaQuestionCircle className="mr-2" /> Questions
-            </a>
-            <a href="#" className="flex items-center text-secondary_text hover:text-primary">
+            </Link>
+            <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
               <FaTags className="mr-2" /> Tags
-            </a>
-            <a href="#" className="flex items-center text-secondary_text hover:text-primary">
+            </Link>
+            <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
               <FaUsers className="mr-2" /> Communities
-            </a>
+            </Link>
           </nav>
         </div>
 

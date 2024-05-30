@@ -49,7 +49,7 @@ const EditProfile = () => {
   };
 
   const handleCancel = () => {
-    navigate('/profile')
+    navigate(-1)
   }
 
   return (
