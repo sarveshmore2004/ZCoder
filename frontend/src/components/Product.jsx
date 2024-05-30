@@ -22,16 +22,16 @@ const Product = () => {
           ))}
         </h1>
         {/* <Divider /> */}
-        <div className={`flex flex-wrap justify-between`}>
-          <div className={`w-5/6 sm:w-1/2 p-6 mt-20`}>
+        <div className={`flex flex-wrap justify-between mt-10 items-center`}>
+          <div className={`w-5/6 sm:w-1/2 p-6 `}>
             <h3
-              className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
+              className={`text-3xl  text-primary_text font-bold leading-none mb-3 `}
             >
               {firstItem?.title}
             </h3>
             <p className={` text-secondary_text`}>{firstItem?.description}</p>
           </div>
-          <div className={` p-6`}>
+          <div className={` w-full sm:w-1/2 p-6`}>
             <img
               className=" max-h-80"
               src={firstItem?.img}
@@ -40,7 +40,7 @@ const Product = () => {
           </div>
         </div>
         <div
-          className={`flex flex-wrap flex-col-reverse sm:flex-row justify-between`}
+          className={`flex flex-wrap flex-col-reverse sm:flex-row justify-between mt-10 items-center`}
         >
           <div className={`w-full sm:w-1/2 p-6`}>
             <img
@@ -49,7 +49,7 @@ const Product = () => {
               alt={secondItem?.title}
             />
           </div>
-          <div className={`w-full sm:w-1/2 p-6 mt-20`}>
+          <div className={`w-full sm:w-1/2 p-6 `}>
             <div className={`align-middle`}>
               <h3
                 className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
@@ -62,8 +62,8 @@ const Product = () => {
             </div>
           </div>
         </div>
-        <div className={`flex flex-wrap justify-between`}>
-          <div className={`w-5/6 sm:w-1/2 p-6 mt-20`}>
+        <div className={`flex flex-wrap justify-between mt-10 items-center`}>
+          <div className={`w-5/6 sm:w-1/2 p-6 `}>
             <h3
               className={`text-3xl  text-primary_text font-bold leading-none mb-3`}
             >
@@ -71,7 +71,7 @@ const Product = () => {
             </h3>
             <p className={` text-secondary_text`}>{thirdItem?.description}</p>
           </div>
-          <div className={`p-6`}>
+          <div className={` w-full sm:w-1/2 p-6`}>
             <img
               className="max-h-80"
               src={thirdItem?.img}

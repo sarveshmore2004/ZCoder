@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <div className="navbar md:px-10 self-center  items-center w-11/12 ">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-2xl font-bold text-primary">ZCoder</Link>
+        <Link to="/" className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20">ZCoder</Link>
       </div>
       <div className="flex-none">
         <SignedOut>
@@ -44,7 +44,7 @@ const Header = () => {
                 Dashboard
               </Link>
             </div>
-            <div className="rounded-md shadow">
+            <div className="rounded-md shadow ml-1 ">
               {/* <Link
                 to="/profile"
                 className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md border-primary text-primary bg-background hover:bg-border hover:text-primary md:py-2 md:text-md md:px-5`}
