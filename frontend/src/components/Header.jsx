@@ -52,7 +52,7 @@ const Header = () => {
             </div>
             <div className="rounded-md shadow ml-1 ">
               <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
-              <UserButton afterSignOutUrl="/" />
+              {/* <UserButton afterSignOutUrl="/" /> */}
             </div>
           </ul>
         </SignedIn>
