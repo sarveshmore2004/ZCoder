@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa";
@@ -72,15 +72,20 @@ const NewUserSetup = () => {
     }));
   };
 
-  const handleCancel = () => {
-    navigate("/dashboard");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Profile created", user);
     navigate("/dashboard");
   };
+
+  // Redirect to dashboard if user profile is already set up
+  useEffect(() => {
+    // Mock check for profile setup, replace with actual check
+    const isProfileSetUp = true; // Replace with actual check logic
+    if (!isProfileSetUp) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>
