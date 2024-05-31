@@ -23,7 +23,7 @@ const userSchema = new Schema(
       comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
       posts: [{ type: Schema.Types.ObjectId, ref: "BlogPost" }],
     },
-    languages: [{ type: String }], // Add languages
+    languages: [{ type: String }],
   },
   { timestamps: true }
 );

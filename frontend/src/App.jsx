@@ -17,6 +17,7 @@ import SignUpPage from "./pages/SignUp";
 import DashboardPage from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import BlogDetailPage from "./pages/BlogDetailPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/:userid/edit" element={<EditProfile />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
+        <Route path="blog/:id" element={<BlogDetailPage />} />
       </Route>
     </Route>
   )
