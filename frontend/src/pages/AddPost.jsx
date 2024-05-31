@@ -124,7 +124,7 @@ const AddPostPage = () => {
                   <button
                     type="button"
                     onClick={handleTagAdd}
-                    className="ml-2 p-2 rounded-lg bg-primary text-primary_text"
+                    className="ml-2 p-2 rounded-lg bg-primary text-primary_text hover:bg-border hover:text-primary"
                   >
                     <FaPaperPlane />
                   </button>
@@ -171,7 +171,7 @@ const AddPostPage = () => {
                 <label htmlFor="private">Private</label>
               </div>
             </div>
-            <button type="submit" className="bg-primary text-primary_text px-4 py-2 rounded-lg">
+            <button type="submit" className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg">
               Add Post
             </button>
           </form>

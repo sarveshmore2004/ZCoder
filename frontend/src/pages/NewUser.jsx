@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa";
+import Header from "../components/Header";
 
 const NewUserSetup = () => {
   const { userId, isLoaded } = useAuth();
@@ -91,6 +92,10 @@ const NewUserSetup = () => {
     <>
       {!isLoaded && <p>Loading...</p>}
       {isLoaded && (
+        <>
+        <div className="w-full flex justify-center bg-background drop-shadow-2xl">
+            <Header />
+        </div>
         <div className="min-h-screen bg-background text-primary_text p-4 flex justify-center items-center">
           <div className="w-full max-w-2xl bg-background p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-primary_text mb-6">
@@ -230,7 +235,7 @@ const NewUserSetup = () => {
             </form>
           </div>
         </div>
-      )}
+        </>)}
     </>
   );
 };

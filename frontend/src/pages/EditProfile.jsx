@@ -155,7 +155,7 @@ const EditProfile = () => {
                         type="text"
                         value={newLanguage}
                         onChange={(e) => setNewLanguage(e.target.value)}
-                        onKeyDown={handleAddLanguage} // Add this line
+                        onKeyDown={handleAddLanguage}
                         className="w-full p-3 border border-secondary rounded-lg"
                         placeholder="Add a new language"
                       />

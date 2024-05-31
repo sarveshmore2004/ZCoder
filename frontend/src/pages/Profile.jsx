@@ -36,6 +36,7 @@ const Profile = () => {
         "Posted: Tips for competitive programming",
       ],
     },
+    languages: ["JavaScript", "Python", "C++"],
   };
 
   const handleEdit = () => {
@@ -44,7 +45,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className=" w-full flex justify-center bg-background drop-shadow-2xl">
+      <div className="w-full flex justify-center bg-background drop-shadow-2xl">
         <Header />
       </div>
       {!isLoaded && <p>Loading...</p>}
@@ -86,6 +87,19 @@ const Profile = () => {
                   <FiMessageCircle className="mr-2" /> Comments
                 </span>
                 <span>{user.comments}</span>
+              </div>
+              <h3 className="text-lg font-semibold mt-8 mb-4 text-primary_text">
+                Languages
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {user.languages.map((language, index) => (
+                  <div
+                    key={index}
+                    className="bg-secondary text-primary_text py-1 px-2 rounded-lg"
+                  >
+                    {language.charAt(0).toUpperCase() + language.slice(1).toLowerCase()}
+                  </div>
+                ))}
               </div>
               <h3 className="text-lg font-semibold mt-8 mb-4 text-primary_text">
                 Coding Profiles
@@ -144,7 +158,7 @@ const Profile = () => {
                   type="radio"
                   name="my_tabs_2"
                   role="tab"
-                  className="tab hover:bg-primary_text hover:text-background"
+                  className="tab hover:bg-border hover:text-primary"
                   aria-label="Posts"
                   checked
                 />
@@ -164,12 +178,12 @@ const Profile = () => {
                   type="radio"
                   name="my_tabs_2"
                   role="tab"
-                  className="tab hover:bg-primary_text hover:text-primary_text"
+                  className="tab hover:bg-border hover:text-primary"
                   aria-label="Comments"
                 />
                 <div
                   role="tabpanel"
-                  className="tab-content bg-primary_text border-secondary rounded-box p-6"
+                  className="tab-content bg-background border-secondary rounded-box p-6"
                 >
                   <ul>
                     {user.recentActivity.comments.map((activity, index) => (
