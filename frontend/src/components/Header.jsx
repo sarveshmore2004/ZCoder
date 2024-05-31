@@ -5,14 +5,19 @@ import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, UserButton, useAuth } from "@clerk/clerk-react";
 
 const Header = () => {
-  const {userId} = useAuth();
+  const { userId } = useAuth();
   const { navigation, company, callToAction } = config;
   const { name: companyName, logo } = company;
 
   return (
     <div className="navbar md:px-10 self-center  items-center w-11/12 ">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20">ZCoder</Link>
+        <Link
+          to="/"
+          className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20"
+        >
+          ZCoder
+        </Link>
       </div>
       <div className="flex-none">
         <SignedOut>
@@ -47,6 +52,7 @@ const Header = () => {
             </div>
             <div className="rounded-md shadow ml-1 ">
               <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
+              <UserButton afterSignOutUrl="/" />
             </div>
           </ul>
         </SignedIn>
