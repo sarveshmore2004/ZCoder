@@ -4,52 +4,29 @@ import { FaExternalLinkAlt, FaGithub, FaLinkedin } from "react-icons/fa";
 import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
+import useFetchUserById from "../hooks/useFetchUserById";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
 
-  const user = {
-    name: "JohnDoe",
-    avatar: "https://via.placeholder.com/150",
-    bio: "A passionate developer and competitive programming enthusiast.",
-    bookmarks: 45,
-    comments: 123,
-    codingProfiles: {
-      leetcode: "https://leetcode.com/JohnDoe",
-      codeforces: "https://codeforces.com/profile/JohnDoe",
-      codechef: "https://www.codechef.com/users/JohnDoe",
-      atcoder: "https://atcoder.jp/users/JohnDoe",
-    },
-    socialProfiles: {
-      github: "https://github.com/JohnDoe",
-      linkedin: "https://www.linkedin.com/in/JohnDoe",
-    },
-    recentActivity: {
-      comments: [
-        "Commented on: Binary Search Solution",
-        "Commented on: Dynamic Programming Challenge",
-      ],
-      posts: [
-        "Posted: How to optimize algorithms",
-        "Posted: Tips for competitive programming",
-      ],
-    },
-    languages: ["JavaScript", "Python", "C++"],
-  };
+  const { user, loading } = useFetchUserById(userid);
 
   const handleEdit = () => {
     navigate(`/${userId}/edit`);
   };
+
+  console.log(user);
 
   return (
     <>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
         <Header />
       </div>
-      {!isLoaded && <p>Loading...</p>}
-      {isLoaded && (
+      {loading && <p>Loading...</p>}
+      {!loading && !user && <p>User not found</p>}
+      {isLoaded && user && (
         <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col lg:flex-row items-start">
           {/* Sidebar */}
           <div className="w-full lg:w-1/4 bg-background p-4 rounded-lg shadow-lg">
@@ -92,57 +69,67 @@ const Profile = () => {
                 Languages
               </h3>
               <div className="flex flex-wrap gap-2">
-                {user.languages.map((language, index) => (
-                  <div
-                    key={index}
-                    className="bg-secondary text-primary_text py-1 px-2 rounded-lg"
-                  >
-                    {language.charAt(0).toUpperCase() + language.slice(1).toLowerCase()}
-                  </div>
-                ))}
+                {user.knownLanguages &&
+                  user.knownLanguages.map((language, index) => (
+                    <div
+                      key={index}
+                      className="bg-secondary text-primary_text py-1 px-2 rounded-lg"
+                    >
+                      {language.charAt(0).toUpperCase() +
+                        language.slice(1).toLowerCase()}
+                    </div>
+                  ))}
               </div>
               <h3 className="text-lg font-semibold mt-8 mb-4 text-primary_text">
                 Coding Profiles
               </h3>
-              {Object.entries(user.codingProfiles).map(([site, url], index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between text-secondary_text mb-2"
-                >
-                  <a
-                    href={url}
-                    className="flex items-center hover:text-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaExternalLinkAlt className="mr-2" />{" "}
-                    {site.charAt(0).toUpperCase() + site.slice(1)}
-                  </a>
-                </div>
-              ))}
+              {user.codingProfiles &&
+                Object.entries(user.codingProfiles).map(
+                  ([site, url], index) =>
+                    url && (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between text-secondary_text mb-2"
+                      >
+                        <a
+                          href={url}
+                          className="flex items-center hover:text-primary"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FaExternalLinkAlt className="mr-2" />{" "}
+                          {site.charAt(0).toUpperCase() + site.slice(1)}
+                        </a>
+                      </div>
+                    )
+                )}
               <h3 className="text-lg font-semibold mt-8 mb-4 text-primary_text">
                 Social Profiles
               </h3>
-              <div className="flex items-center justify-between text-secondary_text mb-2">
-                <a
-                  href={user.socialProfiles.github}
-                  className="flex items-center hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaGithub className="mr-2" /> GitHub
-                </a>
-              </div>
-              <div className="flex items-center justify-between text-secondary_text mb-2">
-                <a
-                  href={user.socialProfiles.linkedin}
-                  className="flex items-center hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaLinkedin className="mr-2" /> LinkedIn
-                </a>
-              </div>
+              {user.socialProfiles &&
+                Object.entries(user.socialProfiles).map(
+                  ([site, url], index) =>
+                    url && (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between text-secondary_text mb-2"
+                      >
+                        <a
+                          href={url}
+                          className="flex items-center hover:text-primary"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {site === "github" ? (
+                            <FaGithub className="mr-2" />
+                          ) : (
+                            <FaLinkedin className="mr-2" />
+                          )}
+                          {site.charAt(0).toUpperCase() + site.slice(1)}
+                        </a>
+                      </div>
+                    )
+                )}
             </div>
           </div>
 
@@ -160,18 +147,19 @@ const Profile = () => {
                   role="tab"
                   className="tab hover:bg-border hover:text-primary"
                   aria-label="Posts"
-                  checked
+                  defaultChecked
                 />
                 <div
                   role="tabpanel"
                   className="tab-content bg-background border-secondary rounded-box p-6"
                 >
                   <ul>
-                    {user.recentActivity.posts.map((activity, index) => (
-                      <li key={index} className="mb-2 text-secondary_text">
-                        {activity}
-                      </li>
-                    ))}
+                    {user.recentActivity?.posts &&
+                      user.recentActivity.posts.map((activity, index) => (
+                        <li key={index} className="mb-2 text-secondary_text">
+                          {activity}
+                        </li>
+                      ))}
                   </ul>
                 </div>
                 <input
@@ -186,11 +174,12 @@ const Profile = () => {
                   className="tab-content bg-background border-secondary rounded-box p-6"
                 >
                   <ul>
-                    {user.recentActivity.comments.map((activity, index) => (
-                      <li key={index} className="mb-2 text-secondary_text">
-                        {activity}
-                      </li>
-                    ))}
+                    {user.recentActivity?.comments &&
+                      user.recentActivity.comments.map((activity, index) => (
+                        <li key={index} className="mb-2 text-secondary_text">
+                          {activity}
+                        </li>
+                      ))}
                   </ul>
                 </div>
               </div>

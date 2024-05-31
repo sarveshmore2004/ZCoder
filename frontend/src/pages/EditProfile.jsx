@@ -3,12 +3,16 @@ import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa"; // Importing the plus icon
+import useUpdateUser from "../hooks/useUpdateUser.js";
+import useFetchUserById from "../hooks/useFetchUserById.js";
 
 const EditProfile = () => {
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
+  const { user: fetchedUser, loading } = useFetchUserById(userid);
+  const { user: updatedUser, updateUser } = useUpdateUser(userid);
 
   useEffect(() => {
     if (isLoaded && userId !== userid) {
@@ -17,23 +21,43 @@ const EditProfile = () => {
         navigate(`/${userid}`);
       }, 2000); // Redirect after 2 seconds
     }
-  }, [isLoaded, userId, userid, navigate]);
+
+    if (fetchedUser) {
+      setUser({
+        ...user,
+        name: fetchedUser.name || "",
+        bio: fetchedUser.bio || "",
+        codingProfiles: fetchedUser.codingProfiles || {
+          leetcode: "",
+          codeforces: "",
+          codechef: "",
+          atcoder: "",
+        },
+        socialProfiles: fetchedUser.socialProfiles || {
+          github: "",
+          linkedin: "",
+        },
+        knownLanguages: fetchedUser.knownLanguages || [],
+      });
+    }
+  }, [isLoaded, userId, userid, navigate, fetchedUser]);
 
   const [user, setUser] = useState({
-    name: "JohnDoe",
-    bio: "A passionate developer and competitive programming enthusiast.",
+    name: "",
+    bio: "",
     codingProfiles: {
-      leetcode: "https://leetcode.com/JohnDoe",
-      codeforces: "https://codeforces.com/profile/JohnDoe",
-      codechef: "https://www.codechef.com/users/JohnDoe",
-      atcoder: "https://atcoder.jp/users/JohnDoe",
+      leetcode: "",
+      codeforces: "",
+      codechef: "",
+      atcoder: "",
     },
     socialProfiles: {
-      github: "https://github.com/JohnDoe",
-      linkedin: "https://www.linkedin.com/in/JohnDoe",
+      github: "",
+      linkedin: "",
     },
-    knownLanguages: ["JavaScript", "Python", "C++"],
+    knownLanguages: [],
   });
+  // console.log(fetchedUser);
 
   const [newLanguage, setNewLanguage] = useState("");
 
@@ -88,15 +112,17 @@ const EditProfile = () => {
     navigate(-1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Profile updated", user);
+    console.log(user);
+    await updateUser(user);
+    navigate(`/${userid}`);
   };
 
   return (
     <>
-      {!isLoaded && <p>Loading...</p>}
-      {isLoaded && (
+      {(!isLoaded || loading) && <p>Loading...</p>}
+      {isLoaded && fetchedUser && (
         <>
           <div className="w-full flex justify-center bg-background drop-shadow-2xl">
             <Header />
