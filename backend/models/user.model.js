@@ -3,27 +3,27 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    clerkId: { type: String, required: true },
+    clerkId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     avatar: { type: String, default: "https://via.placeholder.com/150" },
     bio: { type: String },
     bookmarks: { type: Number, default: 0 },
     comments: { type: Number, default: 0 },
     codingProfiles: {
-      leetcode: { type: String },
-      codeforces: { type: String },
-      codechef: { type: String },
-      atcoder: { type: String },
+      leetcode: { type: String, default: "" },
+      codeforces: { type: String, default: "" },
+      codechef: { type: String, default: "" },
+      atcoder: { type: String, default: "" },
     },
     socialProfiles: {
-      github: { type: String },
-      linkedin: { type: String },
+      github: { type: String, default: "" },
+      linkedin: { type: String, default: "" },
     },
     recentActivity: {
-      comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-      posts: [{ type: Schema.Types.ObjectId, ref: "BlogPost" }],
+      comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
+      posts: { type: [Schema.Types.ObjectId], ref: "BlogPost", default: [] },
     },
-    languages: [{ type: String }],
+    languages: { type: [String], default: [] },
   },
   { timestamps: true }
 );

@@ -10,6 +10,7 @@ const blogPostSchema = new Schema({
   upvotes: { type: Number, default: 0 },
   tags: [{ type: String }],
   content: { type: String, required: true },
+  visibility: { type: Boolean, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
