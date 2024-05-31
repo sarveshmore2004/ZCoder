@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import { Link } from "react-router-dom";
 
 const DashboardPage = () => {
+  // Mock data for blogs
   const blogs = [
     {
       title: "How to optimize algorithms",
@@ -64,9 +65,11 @@ const DashboardPage = () => {
               <button className="border text-white px-4 py-2 rounded-lg flex items-center mb-4 lg:mb-0 lg:mr-4">
                 <FiFilter className="mr-2" /> Filter
               </button>
-              <button className="bg-primary text-white px-4 py-2 rounded-lg flex items-center">
-                <FaPlus className="mr-2" /> Add Post
-              </button>
+              <Link to="/add-post">
+                <button className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg flex items-center">
+                  <FaPlus className="mr-2" /> Add Post
+                </button>
+              </Link>
             </div>
           </header>
 

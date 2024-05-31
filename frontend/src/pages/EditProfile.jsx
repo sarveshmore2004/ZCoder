@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
+import { FaPlus } from "react-icons/fa"; // Importing the plus icon
 
 const EditProfile = () => {
   const { userId, isLoaded } = useAuth();
@@ -56,18 +57,21 @@ const EditProfile = () => {
     }
   };
 
-  const handleAddLanguage = () => {
-    if (
-      newLanguage &&
-      !user.knownLanguages
-        .map((lang) => lang.toLowerCase())
-        .includes(newLanguage.toLowerCase())
-    ) {
-      setUser((prevState) => ({
-        ...prevState,
-        knownLanguages: [...prevState.knownLanguages, newLanguage],
-      }));
-      setNewLanguage("");
+  const handleAddLanguage = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      e.preventDefault();
+      if (
+        newLanguage &&
+        !user.knownLanguages
+          .map((lang) => lang.toLowerCase())
+          .includes(newLanguage.toLowerCase())
+      ) {
+        setUser((prevState) => ({
+          ...prevState,
+          knownLanguages: [...prevState.knownLanguages, newLanguage],
+        }));
+        setNewLanguage("");
+      }
     }
   };
 
@@ -103,7 +107,7 @@ const EditProfile = () => {
                 Edit Profile
               </h2>
               {showError && (
-                <div className="bg-red-500 text-white p-4 rounded mb-6">
+                <div className="bg-primary text-primary_text p-4 rounded mb-6">
                   Unauthorized access! Redirecting to the correct profile...
                 </div>
               )}
@@ -151,6 +155,7 @@ const EditProfile = () => {
                         type="text"
                         value={newLanguage}
                         onChange={(e) => setNewLanguage(e.target.value)}
+                        onKeyDown={handleAddLanguage} // Add this line
                         className="w-full p-3 border border-secondary rounded-lg"
                         placeholder="Add a new language"
                       />
@@ -159,7 +164,7 @@ const EditProfile = () => {
                         onClick={handleAddLanguage}
                         className="ml-2 flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-background bg-primary hover:bg-border hover:text-primary transition duration-200 md:py-2 md:text-md md:px-5"
                       >
-                        Add
+                        <FaPlus />
                       </button>
                     </div>
                   </div>
@@ -231,14 +236,14 @@ const EditProfile = () => {
                   <div className="flex space-x-4 mt-4">
                     <button
                       type="submit"
-                      className="bg-primary text-background py-2 px-4 rounded-md font-medium hover:bg-border hover:text-primary transition duration-200"
+                      className="bg-primary text-primary_text py-2 px-4 rounded-md font-medium hover:bg-border hover:text-primary transition duration-200"
                     >
                       Save Changes
                     </button>
                     <button
                       type="button"
                       onClick={handleCancel}
-                      className="bg-tertiary text-background py-2 px-4 rounded-md font-medium hover:bg-border hover:text-primary transition duration-200"
+                      className="bg-primary/10 text-primary_text py-2 px-4 rounded-md font-medium hover:bg-border hover:text-primary transition duration-200"
                     >
                       Cancel
                     </button>

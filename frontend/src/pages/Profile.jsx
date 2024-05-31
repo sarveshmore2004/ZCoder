@@ -65,7 +65,7 @@ const Profile = () => {
               {userId === userid && (
                 <button
                   onClick={handleEdit}
-                  className="mt-4 bg-primary text-white hover:bg-border hover:text-primary py-2 px-4 rounded-lg"
+                  className="mt-4 bg-primary text-primary_text hover:bg-border hover:text-primary py-2 px-4 rounded-lg"
                 >
                   Edit Profile
                 </button>
@@ -164,12 +164,12 @@ const Profile = () => {
                   type="radio"
                   name="my_tabs_2"
                   role="tab"
-                  className="tab hover:bg-primary_text hover:text-background"
+                  className="tab hover:bg-primary_text hover:text-primary_text"
                   aria-label="Comments"
                 />
                 <div
                   role="tabpanel"
-                  className="tab-content bg-background border-secondary rounded-box p-6"
+                  className="tab-content bg-primary_text border-secondary rounded-box p-6"
                 >
                   <ul>
                     {user.recentActivity.comments.map((activity, index) => (

@@ -18,6 +18,7 @@ import DashboardPage from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import BlogDetailPage from "./pages/BlogDetailPage";
+import AddPostPage from "./pages/AddPost";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="blog/:id" element={<BlogDetailPage />} />
+        <Route path="add-post" element={<AddPostPage />} />
       </Route>
     </Route>
   )

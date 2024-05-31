@@ -25,7 +25,7 @@ const Header = () => {
             <div className="rounded-md shadow">
               <Link
                 to="/sign-in"
-                className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-background bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5`}
+                className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5`}
               >
                 Sign In
               </Link>
@@ -45,7 +45,7 @@ const Header = () => {
             <div className="rounded-md shadow">
               <Link
                 to="/dashboard"
-                className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-background bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5`}
+                className={`w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5`}
               >
                 Dashboard
               </Link>
