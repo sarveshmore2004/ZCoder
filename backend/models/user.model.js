@@ -6,7 +6,7 @@ const userSchema = new Schema(
     clerkId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     avatar: { type: String, default: "https://via.placeholder.com/150" },
-    bio: { type: String },
+    bio: { type: String, default: "Hey I am using ZCoder" },
     bookmarks: { type: Number, default: 0 },
     comments: { type: Number, default: 0 },
     codingProfiles: {

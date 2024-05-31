@@ -20,6 +20,7 @@ import EditProfile from "./pages/EditProfile";
 import BlogDetailPage from "./pages/BlogDetailPage";
 import AddPostPage from "./pages/AddPost";
 import NewUserSetup from "./pages/NewUser";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,7 +41,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
+  );
 }
 
 export default App;
