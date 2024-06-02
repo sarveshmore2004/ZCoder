@@ -39,7 +39,7 @@ const DashboardPage = () => {
         {/* Sidebar */}
         <div className="w-full lg:w-1/6 bg-background p-4 rounded-lg shadow-lg mb-4 lg:mb-0">
           <nav className="flex flex-col space-y-4">
-            <Link to="/" className="flex items-center text-secondary_text hover:text-primary">
+            <Link to="/dashboard" className="flex items-center text-secondary_text hover:text-primary">
               <FaHome className="mr-2" /> Home
             </Link>
             <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
@@ -48,8 +48,8 @@ const DashboardPage = () => {
             <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
               <FaTags className="mr-2" /> Tags
             </Link>
-            <Link to="#" className="flex items-center text-secondary_text hover:text-primary">
-              <FaUsers className="mr-2" /> Communities
+            <Link to="/community" className="flex items-center text-secondary_text hover:text-primary">
+              <FaUsers className="mr-2" /> Community
             </Link>
           </nav>
         </div>

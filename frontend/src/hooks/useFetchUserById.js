@@ -15,7 +15,9 @@ const useFetchUserById = (clerkId) => {
         }
         setUser(data);
       } catch (error) {
-        toast.error("Failed to fetch user. Please try again later.");
+        toast.error(
+          `Failed to fetch user ${clerkId} . Please try again later.`
+        );
       } finally {
         setLoading(false);
       }

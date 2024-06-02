@@ -21,6 +21,7 @@ import BlogDetailPage from "./pages/BlogDetailPage";
 import AddPostPage from "./pages/AddPost";
 import NewUserSetup from "./pages/NewUser";
 import { Toaster } from "react-hot-toast";
+import Community from "./pages/Community";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
       <Route path="/new-user" element={<NewUserSetup />} />
       <Route path="/:userid" element={<Profile />} />
       <Route path="/:userid/edit" element={<EditProfile />} />
+      <Route path="/community" element={<Community/>}/>
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="blog/:id" element={<BlogDetailPage />} />
