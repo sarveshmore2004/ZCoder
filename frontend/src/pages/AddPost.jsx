@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { useAuth } from "@clerk/clerk-react";
 import { FaPaperPlane } from 'react-icons/fa';
+import useFetchUserById from '../hooks/useFetchUserById.js';
+import useCreateBlogPost from '../hooks/useCreateBlogPost.js';
 
 const AddPostPage = () => {
   const navigate = useNavigate();
-  const user= useAuth();
-  console.log(user);
+  const { userId, isLoaded } = useAuth();
+  const { user: fetchedUser, loading } = useFetchUserById(userId);
+  console.log(fetchedUser);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState([]);
@@ -15,28 +18,28 @@ const AddPostPage = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [problemLink, setProblemLink] = useState('');
 
-  const handleSubmit = (e) => {
+  const {createBlogPost} = useCreateBlogPost();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Create the blog post object
     const newPost = {
       title,
       content,
       tags,
-      author: user.userId,
+      author: fetchedUser._id,
       problemLink,
-      isPublic,
-      commentsCount: 0,
-      upvotes: 0,
-      views: 0,
-      date: new Date().toLocaleDateString(),
+      visibility: isPublic,
     };
 
-    console.log(newPost);
-    // Here, you would normally send the data to your backend server
+    
+    await createBlogPost(newPost);
 
-    // After submission, navigate back to the dashboard
+    console.log(newPost);
     navigate('/dashboard');
   };
+
+
 
   const handleTagAdd = () => {
     if (newTag.trim() !== '') {

@@ -3,32 +3,15 @@ import { FiBookmark, FiMessageCircle, FiFilter, FiThumbsUp } from "react-icons/f
 import { FaSort, FaHome, FaQuestionCircle, FaTags, FaUsers, FaPlus, FaEye } from "react-icons/fa";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
+import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
 
 const DashboardPage = () => {
-  // Mock data for blogs
-  const blogs = [
-    {
-      title: "How to optimize algorithms",
-      author: "JohnDoe",
-      date: "May 25, 2024",
-      problemLink: "https://example.com/problem",
-      comments: 12,
-      upvotes: 42,
-      views: 120,
-      tags: ["Optimization", "Algorithms"],
-    },
-    {
-      title: "Tips for competitive programming",
-      author: "JaneDoe",
-      date: "May 23, 2024",
-      problemLink: "https://example.com/problem2",
-      comments: 8,
-      upvotes: 35,
-      views: 98,
-      tags: ["Tips", "Competitive Programming"],
-    },
-    // Add more blog posts here
-  ];
+  const { blogPosts: blogs, loading } = useFetchBlogPosts();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
 
   return (
     <>
@@ -75,10 +58,12 @@ const DashboardPage = () => {
 
           <section>
             <div className="space-y-8">
-              {blogs.map((blog, index) => (
-                <div key={index} className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80">
-                  <h3 className="font-bold text-lg text-primary_text underline hover:underline">{blog.title}</h3>
-                  <a href={blog.problemLink} className="text-primary mb-2 block">Problem Link: {blog.problemLink}</a>
+              {blogs.map((blog) => (
+                <div key={blog._id} className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80">
+                  <Link to={`blog/${blog._id}`}>
+                    <h3 className="font-bold text-lg text-primary_text  hover:underline">{blog.title}</h3>
+                  </Link>
+                  <a href={blog.problemLink} className="text-primary mb-2 block hover:underline ">Problem Link: {blog.problemLink}</a>
                   <div className="mb-2">
                     {blog.tags.map((tag, index) => (
                       <span key={index} className="bg-primary/10 text-primary_text/70 px-2 py-1 rounded-full mr-2 text-sm">
@@ -88,15 +73,17 @@ const DashboardPage = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-secondary_text mt-4">
                     <div className="flex items-center mb-2 sm:mb-0">
-                      <p className="text-secondary_text text-sm">by {blog.author}</p>
-                      <p className="text-secondary_text text-sm ml-4">{blog.date}</p>
+                      <Link to={`/${blog.author.clerkId}`}>
+                        <p className="text-secondary_text text-sm hover:underline"> {blog.author.name}</p>
+                      </Link>
+                      <p className="text-secondary_text text-sm ml-4">{new Date(blog.date).toLocaleString()}</p>
                     </div>
                     <div className="flex items-center">
                       <span className="flex items-center mr-4">
                         <FiThumbsUp className="mr-2" /> {blog.upvotes}
                       </span>
                       <span className="flex items-center mr-4">
-                        <FiMessageCircle className="mr-2" /> {blog.comments}
+                        <FiMessageCircle className="mr-2" /> {blog.commentsCount}
                       </span>
                       <span className="flex items-center mr-4">
                         <FaEye className="mr-2" /> {blog.views}

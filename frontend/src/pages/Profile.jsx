@@ -2,7 +2,7 @@ import React from "react";
 import { FiBookmark, FiMessageCircle } from "react-icons/fi";
 import { FaExternalLinkAlt, FaGithub, FaLinkedin } from "react-icons/fa";
 import Header from "../components/Header";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
 
@@ -155,10 +155,12 @@ const Profile = () => {
                 >
                   <ul>
                     {user.recentActivity?.posts &&
-                      user.recentActivity.posts.map((activity, index) => (
-                        <li key={index} className="mb-2 text-secondary_text">
-                          {activity}
+                      user.recentActivity.posts.map((post, index) => (
+                        <Link to={`/dashboard/blog/${post._id}`}>
+                        <li key={index} className="mb-2 text-secondary_text hover:underline">
+                          {post.title}
                         </li>
+                        </Link>
                       ))}
                   </ul>
                 </div>
@@ -175,10 +177,12 @@ const Profile = () => {
                 >
                   <ul>
                     {user.recentActivity?.comments &&
-                      user.recentActivity.comments.map((activity, index) => (
-                        <li key={index} className="mb-2 text-secondary_text">
-                          {activity}
+                      user.recentActivity.comments.map((comment, index) => (
+                        <Link to={`/dashboard/blog/${comment.postId}`}>
+                        <li key={index} className="mb-2 text-secondary_text hover:underline">
+                          {comment.content}
                         </li>
+                        </Link>
                       ))}
                   </ul>
                 </div>
