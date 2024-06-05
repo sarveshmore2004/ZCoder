@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../components/Header';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Header from "../components/Header";
 import { useAuth } from "@clerk/clerk-react";
-import { FaPaperPlane } from 'react-icons/fa';
-import useFetchBlogPostbyId from '../hooks/useFetchBlogPostbyId.js';
-import useUpdateBlogPost from '../hooks/useUpdateBlogPost.js';
-import useDeleteBlogPost from '../hooks/useDeleteBlogPost.js';
+import { FaPaperPlane } from "react-icons/fa";
+import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId.js";
+import useUpdateBlogPost from "../hooks/useUpdateBlogPost.js";
+import useDeleteBlogPost from "../hooks/useDeleteBlogPost.js";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -16,18 +16,18 @@ const EditPost = () => {
   const { updateBlogPost } = useUpdateBlogPost();
   const { deleteBlogPost } = useDeleteBlogPost();
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
-  const [newTag, setNewTag] = useState('');
+  const [newTag, setNewTag] = useState("");
   const [isPublic, setIsPublic] = useState(true);
-  const [problemLink, setProblemLink] = useState('');
+  const [problemLink, setProblemLink] = useState("");
 
   useEffect(() => {
     if (blogPost) {
       if (userId !== blogPost.author.clerkId) {
         setShowError(true);
-        setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2 seconds
       } else {
         setTitle(blogPost.title);
         setContent(blogPost.content);
@@ -54,7 +54,7 @@ const EditPost = () => {
 
   const handleDelete = async () => {
     await deleteBlogPost(id);
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const handleAddTag = (e) => {
@@ -86,12 +86,17 @@ const EditPost = () => {
           <h1 className="text-3xl font-bold mb-4">Edit Post</h1>
           {loading && <p>Loading...</p>}
           {!loading && showError && (
-            <div className="text-primary">Unauthorized access... Cannot edit! Redirecting to dashboard...</div>
+            <div className="bg-primary text-primary_text p-4 rounded mb-6">
+              Unauthorized access! Redirecting to the correct profile...
+            </div>
           )}
           {!loading && !showError && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-primary_text font-bold mb-2" htmlFor="title">
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="title"
+                >
                   Title
                 </label>
                 <input
@@ -104,7 +109,10 @@ const EditPost = () => {
                 />
               </div>
               <div>
-                <label className="block text-primary_text font-bold mb-2" htmlFor="content">
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="content"
+                >
                   Content
                 </label>
                 <textarea
@@ -117,7 +125,10 @@ const EditPost = () => {
                 />
               </div>
               <div>
-                <label className="block text-primary_text font-bold mb-2" htmlFor="tags">
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="tags"
+                >
                   Tags
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -157,7 +168,10 @@ const EditPost = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-primary_text font-bold mb-2" htmlFor="problemLink">
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="problemLink"
+                >
                   Problem Link
                 </label>
                 <input
@@ -183,7 +197,9 @@ const EditPost = () => {
                     onChange={() => setIsPublic(true)}
                     className="mr-2"
                   />
-                  <label htmlFor="public" className="mr-4">Public</label>
+                  <label htmlFor="public" className="mr-4">
+                    Public
+                  </label>
                   <input
                     id="private"
                     type="radio"
@@ -198,14 +214,25 @@ const EditPost = () => {
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex space-x-4">
-                  <button type="submit" className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg">
+                  <button
+                    type="submit"
+                    className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                  >
                     Update Post
                   </button>
-                  <button type="button" onClick={() => navigate('/dashboard')} className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/dashboard")}
+                    className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                  >
                     Cancel
                   </button>
                 </div>
-                <button type="button" onClick={handleDelete} className="bg-primary/20 text-primary_text hover:bg-primary px-4 py-2 rounded-lg">
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="bg-primary/20 text-primary_text hover:bg-primary px-4 py-2 rounded-lg"
+                >
                   Delete
                 </button>
               </div>

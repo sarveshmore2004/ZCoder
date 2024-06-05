@@ -7,9 +7,6 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
-// Import the layouts
-import DashboardLayout from "./layouts/dashboard-layout";
-
 // Import the components
 import IndexPage from "./pages/Index";
 import SignInPage from "./pages/SignIn";
@@ -33,7 +30,7 @@ const router = createBrowserRouter(
       <Route path="/:userid" element={<Profile />} />
       <Route path="/:userid/edit" element={<EditProfile />} />
       <Route path="/community" element={<Community/>}/>
-      <Route path="/dashboard" element={<DashboardLayout />}>
+      <Route path="/dashboard">
         <Route index element={<DashboardPage />} />
         <Route path="blog/:id" element={<BlogDetailPage />} />
         <Route path="blog/:id/edit" element={<EditPost />} />

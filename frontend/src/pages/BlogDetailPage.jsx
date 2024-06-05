@@ -15,7 +15,10 @@ const BlogDetailPage = () => {
   const { addComment } = useAddCommentToBlogPost(id);
   const [commentContent, setCommentContent] = useState("");
   const { userId, isLoaded } = useAuth();
-  const { user } = useFetchUserById(userId);
+  let user=null;
+  if (userId) {
+    user = useFetchUserById(userId);    
+  }
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const BlogDetailPage = () => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    const newComment = await addComment(commentContent, user._id);
+    const newComment = await addComment(commentContent, user.user._id);
     if (newComment) {
       setComments([...comments, newComment]);
     }
@@ -123,6 +126,7 @@ const BlogDetailPage = () => {
                 </div>
               ))}
             </div>
+            {userId && (
             <form onSubmit={handleCommentSubmit} className="mt-4">
               <textarea
                 value={commentContent}
@@ -138,7 +142,7 @@ const BlogDetailPage = () => {
               >
                 Add Comment
               </button>
-            </form>
+            </form>)}
           </section>
         </div>
       </div>

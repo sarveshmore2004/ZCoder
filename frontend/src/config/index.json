@@ -14,12 +14,12 @@
     "description": "ZCoder is your ultimate platform for creating personalized coding profiles, bookmarking coding problems, and engaging in collaborative learning through solution comments. Join us to enhance your coding skills in a community-driven environment.",
     "img": "/assets/images/product1.jpg",
     "primaryAction": {
-      "text": "Get started",
-      "href": "#"
+      "text": "Dashboard",
+      "to": "/dashboard"
     },
     "secondaryAction": {
-      "text": "Email us",
-      "href": "mailto:shivamsavani935@gmail.com?subject=I like ZCoder!"
+      "text": "Community",
+      "to": "/community"
     }
   },
   "product": {

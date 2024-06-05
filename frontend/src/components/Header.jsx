@@ -11,31 +11,25 @@ const Header = () => {
   return (
     <div className="navbar md:px-10 self-center items-center w-11/12">
       <div className="flex-1">
-        <Link
-          to="/"
-          className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20"
-        >
-          ZCoder
-        </Link>
+        <SignedOut>
+          <Link
+            to="/"
+            className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20"
+          >
+            ZCoder
+          </Link>
+        </SignedOut>
+        <SignedIn>
+          <Link
+            to="/dashboard"
+            className="btn btn-ghost text-2xl font-bold text-primary hover:bg-primary/20"
+          >
+            ZCoder
+          </Link>
+        </SignedIn>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1 items-center gap-2">
-          <div className="rounded-md shadow">
-            <Link
-              to="/dashboard"
-              className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
-            >
-              Dashboard
-            </Link>
-          </div>
-          <div className="rounded-md shadow">
-            <Link
-              to="/community"
-              className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
-            >
-              Community
-            </Link>
-          </div>
           <SignedOut>
             <div className="rounded-md shadow">
               <Link
@@ -55,6 +49,22 @@ const Header = () => {
             </div>
           </SignedOut>
           <SignedIn>
+            <div className="rounded-md shadow">
+              <Link
+                to="/dashboard"
+                className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
+              >
+                Dashboard
+              </Link>
+            </div>
+            <div className="rounded-md shadow">
+              <Link
+                to="/community"
+                className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
+              >
+                Community
+              </Link>
+            </div>
             <div className="rounded-md shadow ml-1">
               <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
             </div>
