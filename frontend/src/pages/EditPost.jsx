@@ -11,6 +11,7 @@ const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { userId, isLoaded } = useAuth();
+  const [showError, setShowError] = useState(false);
   const { blogPost, loading } = useFetchBlogPostbyId(id);
   const { updateBlogPost } = useUpdateBlogPost();
   const { deleteBlogPost } = useDeleteBlogPost();
@@ -24,13 +25,18 @@ const EditPost = () => {
 
   useEffect(() => {
     if (blogPost) {
-      setTitle(blogPost.title);
-      setContent(blogPost.content);
-      setTags(blogPost.tags);
-      setIsPublic(blogPost.visibility);
-      setProblemLink(blogPost.problemLink);
+      if (userId !== blogPost.author.clerkId) {
+        setShowError(true);
+        setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
+      } else {
+        setTitle(blogPost.title);
+        setContent(blogPost.content);
+        setTags(blogPost.tags);
+        setIsPublic(blogPost.visibility);
+        setProblemLink(blogPost.problemLink);
+      }
     }
-  }, [blogPost]);
+  }, [blogPost, userId, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,17 +57,18 @@ const EditPost = () => {
     navigate('/dashboard');
   };
 
-  const handleTagAdd = () => {
-    if (newTag.trim() !== '') {
-      setTags([...tags, newTag.trim()]);
-      setNewTag('');
-    }
-  };
-
-  const handleTagKeyDown = (e) => {
-    if (e.key === 'Enter' && newTag.trim() !== '') {
-      handleTagAdd();
+  const handleAddTag = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
       e.preventDefault();
+      if (
+        newTag.trim() &&
+        !tags
+          .map((tag) => tag.toLowerCase())
+          .includes(newTag.trim().toLowerCase())
+      ) {
+        setTags([...tags, newTag.trim()]);
+        setNewTag("");
+      }
     }
   };
 
@@ -77,9 +84,11 @@ const EditPost = () => {
       <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col items-center">
         <div className="w-full lg:w-2/3 bg-background p-4 rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold mb-4">Edit Post</h1>
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
+          {loading && <p>Loading...</p>}
+          {!loading && showError && (
+            <div className="text-primary">Unauthorized access... Cannot edit! Redirecting to dashboard...</div>
+          )}
+          {!loading && !showError && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-primary_text font-bold mb-2" htmlFor="title">
@@ -133,13 +142,13 @@ const EditPost = () => {
                       type="text"
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
-                      onKeyDown={handleTagKeyDown}
+                      onKeyDown={handleAddTag}
                       className="w-10/12 p-2 border rounded-lg flex-grow"
                       placeholder="Type and press enter to add tags"
                     />
                     <button
                       type="button"
-                      onClick={handleTagAdd}
+                      onClick={handleAddTag}
                       className="ml-2 p-2 rounded-lg bg-primary text-primary_text hover:bg-border hover:text-primary"
                     >
                       <FaPaperPlane />
@@ -192,11 +201,11 @@ const EditPost = () => {
                   <button type="submit" className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg">
                     Update Post
                   </button>
-                  <button type="button" onClick={() => navigate('/dashboard')} className="bg-secondary text-secondary_text hover:bg-border hover:text-secondary px-4 py-2 rounded-lg">
+                  <button type="button" onClick={() => navigate('/dashboard')} className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg">
                     Cancel
                   </button>
                 </div>
-                <button type="button" onClick={handleDelete} className="bg-red-600 text-primary_text hover:bg-red-700 hover:text-white px-4 py-2 rounded-lg">
+                <button type="button" onClick={handleDelete} className="bg-primary/20 text-primary_text hover:bg-primary px-4 py-2 rounded-lg">
                   Delete
                 </button>
               </div>

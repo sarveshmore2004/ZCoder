@@ -85,14 +85,14 @@ const EditProfile = () => {
     if (e.key === "Enter" || e.type === "click") {
       e.preventDefault();
       if (
-        newLanguage &&
+        newLanguage.trim() &&
         !user.knownLanguages
           .map((lang) => lang.toLowerCase())
-          .includes(newLanguage.toLowerCase())
+          .includes(newLanguage.trim().toLowerCase())
       ) {
         setUser((prevState) => ({
           ...prevState,
-          knownLanguages: [...prevState.knownLanguages, newLanguage],
+          knownLanguages: [...prevState.knownLanguages, newLanguage.trim()],
         }));
         setNewLanguage("");
       }

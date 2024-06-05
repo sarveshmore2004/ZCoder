@@ -42,7 +42,7 @@ export const getAllBlogPosts = async (req, res) => {
 export const getBlogPostById = async (req, res) => {
   try {
     const blogPost = await BlogPost.findById(req.params.id)
-      .populate("author", "name")
+      .populate("author", "name clerkId")
       .populate({
         path: 'comments',
         populate: {
