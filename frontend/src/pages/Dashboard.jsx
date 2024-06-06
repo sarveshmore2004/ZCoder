@@ -19,7 +19,7 @@ import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
 import { useAuth } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
-  const [sortMethod, setSortMethod] = useState("oldest");
+  const [sortMethod, setSortMethod] = useState("recent");
   const [tagFilter, setTagFilter] = useState("");
   const [platformFilter, setPlatformFilter] = useState("");
   const { blogPosts: blogs, loading } = useFetchBlogPosts(sortMethod);

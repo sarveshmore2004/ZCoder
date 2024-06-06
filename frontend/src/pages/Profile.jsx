@@ -1,10 +1,11 @@
 import React from "react";
-import { FiBookmark, FiMessageCircle } from "react-icons/fi";
+import { FiBookmark, FiMessageCircle, FiLock, FiUnlock } from "react-icons/fi";
 import { FaExternalLinkAlt, FaGithub, FaLinkedin } from "react-icons/fa";
 import Header from "../components/Header";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
+import { format } from "date-fns"; // Import date-fns for formatting dates
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -18,6 +19,18 @@ const Profile = () => {
   };
 
   console.log(user);
+
+  let publicPosts = user?.recentActivity?.posts;
+  let publicComments = user?.recentActivity?.comments;
+  if (isLoaded && userId !== userid) {
+    publicPosts = user?.recentActivity?.posts?.filter(
+      (post) => post.visibility === true
+    ) || [];
+
+    publicComments = user?.recentActivity?.comments?.filter(
+      (comment) => comment.postId?.visibility === true
+    ) || [];
+  }
 
   return (
     <>
@@ -55,15 +68,15 @@ const Profile = () => {
               </h3>
               <div className="flex items-center justify-between text-secondary_text mb-2">
                 <span className="flex items-center">
-                  <FiBookmark className="mr-2" /> Bookmarks
+                  <FiBookmark className="mr-2" /> Posts
                 </span>
-                <span>{user.bookmarks}</span>
+                <span>{publicPosts.length}</span>
               </div>
               <div className="flex items-center justify-between text-secondary_text mb-2">
                 <span className="flex items-center">
                   <FiMessageCircle className="mr-2" /> Comments
                 </span>
-                <span>{user.comments}</span>
+                <span>{publicComments.length}</span>
               </div>
               <h3 className="text-lg font-semibold mt-8 mb-4 text-primary_text">
                 Languages
@@ -154,14 +167,26 @@ const Profile = () => {
                   className="tab-content bg-background border-secondary rounded-box p-6"
                 >
                   <ul>
-                    {user.recentActivity?.posts &&
-                      user.recentActivity.posts.map((post, index) => (
-                        <Link to={`/dashboard/blog/${post._id}`}>
-                        <li key={index} className="mb-2 text-secondary_text hover:underline">
-                          {post.title}
-                        </li>
-                        </Link>
-                      ))}
+                    {publicPosts.map((post, index) => (
+                      <li key={index} className="mb-4">
+                        <div className="flex items-center justify-between text-secondary_text">
+                          <Link to={`/dashboard/blog/${post._id}`} className=" w-24 sm:w-96 md:w-2/3">
+                            <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
+                              {post.title}
+                            </div>
+                          </Link>
+                          <span className="ml-2 text-xs flex gap-1 sm:text-sm">
+                            {format(new Date(post.date), 'Pp')}
+                            {post.visibility === true ? (
+                              <FiUnlock className="ml-2 text-green-500" title="Public" />
+                            ) : (
+                              <FiLock className="ml-2 text-red-500" title="Private" />
+                            )}
+                          </span>
+                        </div>
+                        <div className="divider m-0"></div>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <input
@@ -176,14 +201,26 @@ const Profile = () => {
                   className="tab-content bg-background border-secondary rounded-box p-6"
                 >
                   <ul>
-                    {user.recentActivity?.comments &&
-                      user.recentActivity.comments.map((comment, index) => (
-                        <Link to={`/dashboard/blog/${comment.postId}`}>
-                        <li key={index} className="mb-2 text-secondary_text hover:underline">
-                          {comment.content}
-                        </li>
-                        </Link>
-                      ))}
+                    {publicComments.map((comment, index) => (
+                      <li key={index} className="mb-4 ">
+                        <div className="flex items-center justify-between text-secondary_text  ">
+                          <Link to={`/dashboard/blog/${comment.postId}`} className=" w-24 sm:w-96 md:w-2/3">
+                          <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
+                              {comment.content}
+                            </div>
+                          </Link>
+                          <span className="ml-2 text-xs flex gap-1 sm:text-sm">
+                            {format(new Date(comment.date), 'Pp')}
+                            {comment.postId?.visibility === true ? (
+                              <FiUnlock className="ml-2 text-green-500" title="Public" />
+                            ) : (
+                              <FiLock className="ml-2 text-red-500" title="Private" />
+                            )}
+                          </span>
+                        </div>
+                        <div className="divider m-0"></div>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>

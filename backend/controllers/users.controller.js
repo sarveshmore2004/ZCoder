@@ -32,7 +32,13 @@ const createUser = async (req, res) => {
 // Get user by clerkId
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findOne({ clerkId: req.params.id }).populate("recentActivity.comments").populate("recentActivity.posts");
+    const user = await User.findOne({ clerkId: req.params.id }).populate({
+      path: 'recentActivity.comments',
+      populate: {
+        path: 'postId',
+        select: 'visibility'
+      }
+    }).populate("recentActivity.posts");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
