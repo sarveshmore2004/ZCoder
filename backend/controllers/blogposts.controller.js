@@ -30,8 +30,24 @@ export const createBlogPost = async (req, res) => {
 
 // Get all blog posts
 export const getAllBlogPosts = async (req, res) => {
+  const { sort } = req.query;
+  let sortOption;
+
+  switch (sort) {
+    case "recent":
+      sortOption = { date: -1 };
+      break;
+    case "oldest":
+      sortOption = { date: 1 };
+      break;
+    case "popularity":
+      sortOption = { upvotes: -1 };
+      break;
+    default:
+      sortOption = { date: -1 };
+  }
   try {
-    const blogPosts = await BlogPost.find({visibility:{$eq:true}}).populate("author");
+    const blogPosts = await BlogPost.find({visibility:{$eq:true}}).populate("author").sort(sortOption);
     res.status(200).json(blogPosts);
   } catch (error) {
     res.status(500).json({ message: error.message });

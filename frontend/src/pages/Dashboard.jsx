@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FiBookmark,
   FiMessageCircle,
@@ -6,7 +6,6 @@ import {
   FiThumbsUp,
 } from "react-icons/fi";
 import {
-  FaSort,
   FaHome,
   FaQuestionCircle,
   FaTags,
@@ -20,12 +19,32 @@ import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
 import { useAuth } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
-  const { blogPosts: blogs, loading } = useFetchBlogPosts();
+  const [sortMethod, setSortMethod] = useState("oldest");
+  const [tagFilter, setTagFilter] = useState("");
+  const [platformFilter, setPlatformFilter] = useState("");
+  const { blogPosts: blogs, loading } = useFetchBlogPosts(sortMethod);
   const { userId } = useAuth();
+
+  const handleSortChange = (e) => {
+    setSortMethod(e.target.value);
+  };
+
+  const handleTagFilterChange = (e) => {
+    setTagFilter(e.target.value);
+  };
+
+  const handlePlatformFilterChange = (e) => {
+    setPlatformFilter(e.target.value);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  const filteredBlogs = blogs.filter(blog => {
+    return (tagFilter === "" || blog.tags.includes(tagFilter)) && 
+           (platformFilter === "" || blog.platform === platformFilter);
+  });
 
   return (
     <>
@@ -67,13 +86,36 @@ const DashboardPage = () => {
         <div className="w-full lg:w-5/6 bg-background p-4 rounded-lg shadow-lg">
           <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
             <h1 className="text-3xl font-bold mb-4 lg:mb-0">All Questions</h1>
-            <div className="flex flex-col lg:flex-row items-start lg:items-center">
-              <button className="border text-white px-4 py-2 rounded-lg flex items-center mb-4 lg:mb-0 lg:mr-4">
-                <FaSort className="mr-2" /> Sort By
-              </button>
-              <button className="border text-white px-4 py-2 rounded-lg flex items-center mb-4 lg:mb-0 lg:mr-4">
-                <FiFilter className="mr-2" /> Filter
-              </button>
+            <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
+              <select 
+                className="select select-bordered w-full lg:w-auto" 
+                value={sortMethod} 
+                onChange={handleSortChange}
+              >
+                <option value="recent">Recent</option>
+                <option value="oldest">Oldest</option>
+                <option value="popularity">Popularity</option>
+              </select>
+              <select 
+                className="select select-bordered w-full lg:w-auto" 
+                value={tagFilter} 
+                onChange={handleTagFilterChange}
+              >
+                <option value="">All Tags</option>
+                {/* Replace with your actual tags */}
+                <option value="GFG">Tag 1</option>
+                <option value="tag2">Tag 2</option>
+              </select>
+              <select 
+                className="select select-bordered w-full lg:w-auto" 
+                value={platformFilter} 
+                onChange={handlePlatformFilterChange}
+              >
+                <option value="">All Platforms</option>
+                {/* Replace with your actual platforms */}
+                <option value="platform1">Platform 1</option>
+                <option value="platform2">Platform 2</option>
+              </select>
               {userId && (
                 <Link to="add-post">
                   <button className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg flex items-center">
@@ -86,19 +128,19 @@ const DashboardPage = () => {
 
           <section>
             <div className="space-y-8">
-              {blogs.map((blog) => (
+              {filteredBlogs.map((blog) => (
                 <div
                   key={blog._id}
                   className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80"
                 >
                   <Link to={`blog/${blog._id}`}>
-                    <h3 className="font-bold text-lg text-primary_text  hover:underline">
+                    <h3 className="font-bold text-lg text-primary_text hover:underline">
                       {blog.title}
                     </h3>
                   </Link>
                   <a
                     href={blog.problemLink}
-                    className="text-primary mb-2 block hover:underline "
+                    className="text-primary mb-2 block hover:underline"
                   >
                     Problem Link: {blog.problemLink}
                   </a>
