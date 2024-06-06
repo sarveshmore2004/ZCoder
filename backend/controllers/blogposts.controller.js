@@ -135,3 +135,49 @@ export const addCommentToBlogPost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Upvote a blog post
+export const upvoteBlogPost = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const blogPost = await BlogPost.findById(req.params.id);
+    if (!blogPost) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    if (!blogPost.upvotes.includes(userId)) {
+      blogPost.upvotes.push(userId);
+    }
+    if (blogPost.downvotes.includes(userId)) {
+      blogPost.downvotes = blogPost.downvotes.filter(id => id.toString() !== userId);
+    }
+
+    const updatedBlogPost = await blogPost.save();
+    res.status(200).json(updatedBlogPost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Downvote a blog post
+export const downvoteBlogPost = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const blogPost = await BlogPost.findById(req.params.id);
+    if (!blogPost) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    if (!blogPost.downvotes.includes(userId)) {
+      blogPost.downvotes.push(userId);
+    }
+    if (blogPost.upvotes.includes(userId)) {
+      blogPost.upvotes = blogPost.upvotes.filter(id => id.toString() !== userId);
+    }
+
+    const updatedBlogPost = await blogPost.save();
+    res.status(200).json(updatedBlogPost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

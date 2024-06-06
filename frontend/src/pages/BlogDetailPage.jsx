@@ -2,32 +2,47 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
-import { FaEdit, FaEye } from "react-icons/fa";
+import { FaEdit, FaEye, FaThumbsDown } from "react-icons/fa";
+import { TiArrowUpOutline, TiArrowDownOutline, TiArrowUp, TiArrowDown } from "react-icons/ti";
 import Header from "../components/Header";
-import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId.js";
+import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId";
 import useAddCommentToBlogPost from "../hooks/useAddCommentToBlogPost";
+import useUpvoteBlogPost from "../hooks/useUpvoteBlogPost";
+import useDownvoteBlogPost from "../hooks/useDownvoteBlogPost";
 import { useAuth } from "@clerk/clerk-react";
-import useFetchUserById from "../hooks/useFetchUserById.js";
+import useFetchUserById from "../hooks/useFetchUserById";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
-  const { blogPost, loading } = useFetchBlogPostbyId(id);
+  const { blogPost, loading: postLoading } = useFetchBlogPostbyId(id);
   const { addComment } = useAddCommentToBlogPost(id);
+  const { upvote } = useUpvoteBlogPost(id);
+  const { downvote } = useDownvoteBlogPost(id);
   const [commentContent, setCommentContent] = useState("");
-  const { userId, isLoaded } = useAuth();
-  let user=null;
-  if (userId) {
-    user = useFetchUserById(userId);    
-  }
+  const { userId, isLoaded: authLoaded } = useAuth();
+  const { user, loading: userLoading } = useFetchUserById(userId);
   const [comments, setComments] = useState([]);
+  const [upvoteCount, setUpvoteCount] = useState(0);
+  const [downvoteCount, setDownvoteCount] = useState(0);
+  const [hasUpvoted, setHasUpvoted] = useState(false);
+  const [hasDownvoted, setHasDownvoted] = useState(false);
 
   useEffect(() => {
-    if (blogPost) {
+    if (!postLoading && blogPost) {
       setComments(blogPost.comments);
+      setUpvoteCount(blogPost.upvotes.length);
+      setDownvoteCount(blogPost.downvotes.length);
     }
-  }, [blogPost]);
+  }, [postLoading, blogPost]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!userLoading && user && blogPost) {
+      setHasUpvoted(blogPost.upvotes.includes(user._id));
+      setHasDownvoted(blogPost.downvotes.includes(user._id));
+    }
+  }, [userLoading, user, blogPost]);
+
+  if (postLoading || userLoading) {
     return <div>Loading...</div>;
   }
 
@@ -37,11 +52,37 @@ const BlogDetailPage = () => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    const newComment = await addComment(commentContent, user.user._id);
-    if (newComment) {
-      setComments([...comments, newComment]);
+    if (user && user._id) {
+      const newComment = await addComment(commentContent, user._id);
+      if (newComment) {
+        setComments([...comments, newComment]);
+      }
+      setCommentContent("");
     }
-    setCommentContent("");
+  };
+
+  const handleUpvote = async () => {
+    if (user && user._id && !hasUpvoted) {
+      await upvote(user._id);
+      setUpvoteCount(upvoteCount + 1);
+      setHasUpvoted(true);
+      if (hasDownvoted) {
+        setDownvoteCount(downvoteCount - 1);
+        setHasDownvoted(false);
+      }
+    }
+  };
+
+  const handleDownvote = async () => {
+    if (user && user._id && !hasDownvoted) {
+      await downvote(user._id);
+      setDownvoteCount(downvoteCount + 1);
+      setHasDownvoted(true);
+      if (hasUpvoted) {
+        setUpvoteCount(upvoteCount - 1);
+        setHasUpvoted(false);
+      }
+    }
   };
 
   return (
@@ -92,10 +133,13 @@ const BlogDetailPage = () => {
           </div>
           <div className="flex items-center text-secondary_text mb-4">
             <span className="flex items-center mr-4">
-              <FiThumbsUp className="mr-2" /> {blogPost.upvotes}
+              <FiThumbsUp className="mr-2" /> {upvoteCount}
             </span>
             <span className="flex items-center mr-4">
-              <FiMessageCircle className="mr-2" /> {blogPost.commentsCount}
+              <FaThumbsDown className="mr-2" /> {downvoteCount}
+            </span>
+            <span className="flex items-center mr-4">
+              <FiMessageCircle className="mr-2" /> {comments.length}
             </span>
             <span className="flex items-center mr-4">
               <FaEye className="mr-2" /> {blogPost.views}
@@ -104,6 +148,22 @@ const BlogDetailPage = () => {
           <div className="mb-8">
             <p>{blogPost.content}</p>
           </div>
+          {userId && (
+            <div className="flex space-x-4">
+              <button
+                onClick={handleUpvote}
+                className={`flex items-center p-2 rounded-lg ${hasUpvoted ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+              >
+                {hasUpvoted ? <TiArrowUp /> : <TiArrowUpOutline />} Upvote
+              </button>
+              <button
+                onClick={handleDownvote}
+                className={`flex items-center p-2 rounded-lg ${hasDownvoted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"}`}
+              >
+                {hasDownvoted ? <TiArrowDown /> : <TiArrowDownOutline />} Downvote
+              </button>
+            </div>
+          )}
           <section className="mt-8">
             <h2 className="text-2xl font-bold mb-4">Comments</h2>
             <div className="space-y-4">
@@ -127,22 +187,23 @@ const BlogDetailPage = () => {
               ))}
             </div>
             {userId && (
-            <form onSubmit={handleCommentSubmit} className="mt-4">
-              <textarea
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-                className="w-full p-2 border rounded-lg"
-                rows="4"
-                placeholder="Add a comment..."
-                required
-              />
-              <button
-                type="submit"
-                className="mt-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-              >
-                Add Comment
-              </button>
-            </form>)}
+              <form onSubmit={handleCommentSubmit} className="mt-4">
+                <textarea
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  rows="4"
+                  placeholder="Add a comment..."
+                  required
+                />
+                <button
+                  type="submit"
+                  className="mt-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                >
+                  Add Comment
+                </button>
+              </form>
+            )}
           </section>
         </div>
       </div>

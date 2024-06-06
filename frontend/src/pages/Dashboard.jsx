@@ -126,7 +126,7 @@ const DashboardPage = () => {
                     </div>
                     <div className="flex items-center">
                       <span className="flex items-center mr-4">
-                        <FiThumbsUp className="mr-2" /> {blog.upvotes}
+                        <FiThumbsUp className="mr-2" /> {blog.upvotes.length}
                       </span>
                       <span className="flex items-center mr-4">
                         <FiMessageCircle className="mr-2" />{" "}
