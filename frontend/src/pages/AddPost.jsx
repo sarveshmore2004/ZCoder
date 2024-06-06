@@ -190,12 +190,21 @@ const AddPostPage = () => {
                   <label htmlFor="private">Private</label>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-              >
-                Add Post
-              </button>
+              <div className="flex space-x-4">
+                  <button
+                    type="submit"
+                    className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                  >
+                    Add Post
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate("/dashboard")}
+                    className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
             </form>
           </div>
         </div>

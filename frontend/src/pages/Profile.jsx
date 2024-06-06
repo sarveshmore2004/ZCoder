@@ -20,8 +20,8 @@ const Profile = () => {
 
   console.log(user);
 
-  let publicPosts = user?.recentActivity?.posts;
-  let publicComments = user?.recentActivity?.comments;
+  let publicPosts = user?.recentActivity?.posts.toReversed();
+  let publicComments = user?.recentActivity?.comments.toReversed();
   if (isLoaded && userId !== userid) {
     publicPosts = user?.recentActivity?.posts?.filter(
       (post) => post.visibility === true
@@ -30,8 +30,11 @@ const Profile = () => {
     publicComments = user?.recentActivity?.comments?.filter(
       (comment) => comment.postId?.visibility === true
     ) || [];
+
   }
 
+
+console.log(publicPosts)
   return (
     <>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
@@ -170,7 +173,7 @@ const Profile = () => {
                     {publicPosts.map((post, index) => (
                       <li key={index} className="mb-4">
                         <div className="flex items-center justify-between text-secondary_text">
-                          <Link to={`/dashboard/blog/${post._id}`} className=" w-24 sm:w-96 md:w-2/3">
+                          <Link to={`/dashboard/blog/${post._id}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
                             <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
                               {post.title}
                             </div>
@@ -204,7 +207,7 @@ const Profile = () => {
                     {publicComments.map((comment, index) => (
                       <li key={index} className="mb-4 ">
                         <div className="flex items-center justify-between text-secondary_text  ">
-                          <Link to={`/dashboard/blog/${comment.postId}`} className=" w-24 sm:w-96 md:w-2/3">
+                          <Link to={`/dashboard/blog/${comment.postId}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
                           <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
                               {comment.content}
                             </div>

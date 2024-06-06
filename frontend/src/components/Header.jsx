@@ -1,6 +1,7 @@
-import React, { Fragment } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton, useAuth } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
+import { FiMenu, FiX } from "react-icons/fi";
 import config from "../config/index.json";
 
 const Header = () => {
@@ -8,8 +9,14 @@ const Header = () => {
   const { navigation, company, callToAction } = config;
   const { name: companyName, logo } = company;
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <div className="navbar md:px-10 self-center items-center w-11/12">
+    <div className="navbar md:px-5 self-center items-center">
       <div className="flex-1">
         <SignedOut>
           <Link
@@ -28,8 +35,62 @@ const Header = () => {
           </Link>
         </SignedIn>
       </div>
-      <div className="flex-none">
-        <ul className="menu menu-horizontal px-1 items-center gap-2">
+      <div className="flex-none md:hidden dropdown dropdown-bottom dropdown-open dropdown-end">
+        <button
+          className={`btn btn-ghost text-primary text-2xl ${isMenuOpen && 'bg-primary/20' } `}
+          onClick={toggleMenu}
+        >
+          {isMenuOpen ? <FiX /> : <FiMenu />}
+        </button>
+        {isMenuOpen && (
+          <ul
+            tabIndex={0}
+            className="dropdown-content z-[1] menu p-2 shadow  bg-background outline outline-1 outline-primary/50 rounded-box w-52 items-center"
+          >
+            <SignedOut>
+              <li>
+                <Link
+                  to="/sign-in"
+                  className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-primary_text hover:bg-border hover:text-primary"
+                >
+                  Sign In
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/sign-up"
+                  className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-primary hover:bg-border"
+                >
+                  Sign Up
+                </Link>
+              </li>
+            </SignedOut>
+            <SignedIn>
+              <li>
+                <Link
+                  to="/dashboard"
+                  className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-primary_text hover:bg-border hover:text-primary"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/community"
+                  className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-primary_text hover:bg-border hover:text-primary"
+                >
+                  Community
+                </Link>
+              </li>
+              <li>
+                <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
+              </li>
+            </SignedIn>
+          </ul>
+        )}
+      </div>
+      <div className="flex-none hidden md:flex md:items-center">
+        <ul className="menu menu-horizontal px-1 md:items-center gap-2">
           <SignedOut>
             <div className="rounded-md shadow">
               <Link
