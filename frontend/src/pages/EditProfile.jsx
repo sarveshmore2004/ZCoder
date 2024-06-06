@@ -134,7 +134,7 @@ const EditProfile = () => {
               </h2>
               {showError && (
                 <div className="bg-primary text-primary_text p-4 rounded mb-6">
-                  Unauthorized access! Redirecting to the correct profile...
+                  Unauthorized access! Redirecting to the Profile...
                 </div>
               )}
               {!showError && (

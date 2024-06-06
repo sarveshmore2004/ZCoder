@@ -27,7 +27,7 @@ const EditPost = () => {
     if (blogPost) {
       if (userId !== blogPost.author.clerkId) {
         setShowError(true);
-        setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate(-1), 2000); // Redirect after 2 seconds
       } else {
         setTitle(blogPost.title);
         setContent(blogPost.content);
@@ -87,7 +87,7 @@ const EditPost = () => {
           {loading && <p>Loading...</p>}
           {!loading && showError && (
             <div className="bg-primary text-primary_text p-4 rounded mb-6">
-              Unauthorized access! Redirecting to the correct profile...
+              Unauthorized access! Redirecting to the current Post...
             </div>
           )}
           {!loading && !showError && (

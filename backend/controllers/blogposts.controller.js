@@ -31,7 +31,7 @@ export const createBlogPost = async (req, res) => {
 // Get all blog posts
 export const getAllBlogPosts = async (req, res) => {
   try {
-    const blogPosts = await BlogPost.find().populate("author");
+    const blogPosts = await BlogPost.find({visibility:{$eq:true}}).populate("author");
     res.status(200).json(blogPosts);
   } catch (error) {
     res.status(500).json({ message: error.message });

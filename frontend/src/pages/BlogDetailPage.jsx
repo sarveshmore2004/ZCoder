@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { FaEdit, FaEye, FaThumbsDown } from "react-icons/fa";
-import { TiArrowUpOutline, TiArrowDownOutline, TiArrowUp, TiArrowDown } from "react-icons/ti";
+import {
+  TiArrowUpOutline,
+  TiArrowDownOutline,
+  TiArrowUp,
+  TiArrowDown,
+} from "react-icons/ti";
 import Header from "../components/Header";
 import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId";
 import useAddCommentToBlogPost from "../hooks/useAddCommentToBlogPost";
@@ -14,6 +19,7 @@ import useFetchUserById from "../hooks/useFetchUserById";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { blogPost, loading: postLoading } = useFetchBlogPostbyId(id);
   const { addComment } = useAddCommentToBlogPost(id);
   const { upvote } = useUpvoteBlogPost(id);
@@ -29,6 +35,9 @@ const BlogDetailPage = () => {
 
   useEffect(() => {
     if (!postLoading && blogPost) {
+      if (!blogPost.visibility && blogPost.author.clerkId !== userId) {
+        setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
+      }
       setComments(blogPost.comments);
       setUpvoteCount(blogPost.upvotes.length);
       setDownvoteCount(blogPost.downvotes.length);
@@ -44,6 +53,14 @@ const BlogDetailPage = () => {
 
   if (postLoading || userLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (!blogPost.visibility && blogPost.author.clerkId !== userId) {
+    return (
+      <div className="bg-primary text-primary_text p-4 rounded mb-6">
+        Unauthorized access! Redirecting to the Dashboard...
+      </div>
+    );
   }
 
   if (blogPost?.message) {
@@ -152,15 +169,24 @@ const BlogDetailPage = () => {
             <div className="flex space-x-4">
               <button
                 onClick={handleUpvote}
-                className={`flex items-center p-2 rounded-lg ${hasUpvoted ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                className={`flex items-center p-2 rounded-lg ${
+                  hasUpvoted
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
               >
                 {hasUpvoted ? <TiArrowUp /> : <TiArrowUpOutline />} Upvote
               </button>
               <button
                 onClick={handleDownvote}
-                className={`flex items-center p-2 rounded-lg ${hasDownvoted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                className={`flex items-center p-2 rounded-lg ${
+                  hasDownvoted
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
               >
-                {hasDownvoted ? <TiArrowDown /> : <TiArrowDownOutline />} Downvote
+                {hasDownvoted ? <TiArrowDown /> : <TiArrowDownOutline />}{" "}
+                Downvote
               </button>
             </div>
           )}

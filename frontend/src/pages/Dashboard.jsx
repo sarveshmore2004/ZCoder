@@ -116,7 +116,6 @@ const DashboardPage = () => {
                     <div className="flex items-center mb-2 sm:mb-0">
                       <Link to={`/${blog.author.clerkId}`}>
                         <p className="text-secondary_text text-sm hover:underline">
-                          {" "}
                           {blog.author.name}
                         </p>
                       </Link>
@@ -129,7 +128,7 @@ const DashboardPage = () => {
                         <FiThumbsUp className="mr-2" /> {blog.upvotes.length}
                       </span>
                       <span className="flex items-center mr-4">
-                        <FiMessageCircle className="mr-2" />{" "}
+                        <FiMessageCircle className="mr-2" />
                         {blog.commentsCount}
                       </span>
                       <span className="flex items-center mr-4">
