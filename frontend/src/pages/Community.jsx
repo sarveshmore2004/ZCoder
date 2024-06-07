@@ -1,13 +1,20 @@
-// src/pages/CommunityPage.jsx
-
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaSort, FaHome, FaQuestionCircle, FaTags, FaUsers, FaPlus, FaEye } from "react-icons/fa";
+import { FaHome, FaQuestionCircle, FaTags, FaUsers } from "react-icons/fa";
 import Header from "../components/Header";
 import useFetchUsers from "../hooks/useFetchUsers";
 
 const CommunityPage = () => {
-  const { users, loading } = useFetchUsers();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+  const { users, loading, totalPages } = useFetchUsers( search , page);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(query);
+    setPage(1);
+  };
 
   return (
     <>
@@ -37,6 +44,21 @@ const CommunityPage = () => {
         <div className="w-full lg:w-5/6 bg-background p-4 rounded-lg shadow-lg">
           <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
             <h1 className="text-3xl font-bold mb-4 lg:mb-0">Community</h1>
+            <form onSubmit={handleSearch} className="flex flex-col lg:flex-row items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
+              <input
+                type="text"
+                className="input input-bordered w-full lg:w-auto"
+                placeholder="Search users"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+              >
+                Search
+              </button>
+            </form>
           </header>
 
           {loading ? (
@@ -58,6 +80,25 @@ const CommunityPage = () => {
               </div>
             </section>
           )}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+              className="px-4 py-2 mx-1 bg-primary text-primary_text rounded-lg disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span className="px-4 py-2 mx-1">{`Page ${page} of ${totalPages}`}</span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+              className="px-4 py-2 mx-1 bg-primary text-primary_text rounded-lg disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </>

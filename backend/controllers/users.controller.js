@@ -2,14 +2,22 @@ import User from "../models/user.model.js";
 
 // Get all users
 const getUsers = async (req, res) => {
+  const { page = 1, limit , search = "" } = req.query;
+  const skip = (page - 1) * limit;
+  const searchQuery = search ? { name: { $regex: search, $options: "i" } } : {};
+
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    const users = await User.find(searchQuery).skip(skip).limit(parseInt(limit));
+    const totalUsers = await User.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    res.status(200).json({ users, totalPages });
   } catch (error) {
     console.log("Error in getUsers controller", error.message);
     res.status(400).json({ error: error.message });
   }
 };
+
 
 // Create a new user
 const createUser = async (req, res) => {
