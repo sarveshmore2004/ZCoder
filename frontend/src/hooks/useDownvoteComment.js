@@ -1,38 +1,30 @@
-import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import toast from "react-hot-toast";
 
-const useDownvoteComment = (postId, commentId) => {
-  const [loading, setLoading] = useState(false);
-
-  const downvoteComment = async (userId) => {
-    setLoading(true);
-
+const useDownvoteComment = (postId) => {
+  const downvoteComment = async (commentId, userId) => {
     try {
       const res = await fetch(`/api/blogposts/${postId}/comments/${commentId}/downvote`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId,
-        }),
+        body: JSON.stringify({ userId }),
       });
 
       if (res.ok) {
-        toast.success('Comment downvoted successfully');
+        toast.success("Comment downvoted successfully");
         const data = await res.json();
         return data;
       } else {
-        toast.error('Failed to downvote comment');
+        toast.error("Failed to downvote comment");
       }
     } catch (err) {
-      toast.error('Failed to downvote comment');
-    } finally {
-      setLoading(false);
+      toast.error("Failed to downvote comment");
     }
   };
 
-  return { downvoteComment, loading };
+  return { downvoteComment };
 };
 
 export default useDownvoteComment;
