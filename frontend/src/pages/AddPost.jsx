@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { useAuth } from "@clerk/clerk-react";
@@ -15,19 +15,18 @@ const AddPostPage = () => {
   } else if (!userId) {
     navigate(-1);
   } else {
-    const { user: fetchedUser, loading } = useFetchUserById(userId);
-    console.log(fetchedUser);
+    const { user: fetchedUser } = useFetchUserById(userId);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [tags, setTags] = useState([]);
     const [newTag, setNewTag] = useState("");
     const [isPublic, setIsPublic] = useState(true);
     const [problemLink, setProblemLink] = useState("");
+    const [platform, setPlatform] = useState("");
     const { createBlogPost } = useCreateBlogPost();
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      // Create the blog post object
       const newPost = {
         title,
         content,
@@ -35,11 +34,10 @@ const AddPostPage = () => {
         author: fetchedUser._id,
         problemLink,
         visibility: isPublic,
+        platform,
       };
 
       await createBlogPost(newPost);
-
-      console.log(newPost);
       navigate("/dashboard");
     };
 
@@ -162,6 +160,22 @@ const AddPostPage = () => {
                 />
               </div>
               <div>
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="platform"
+                >
+                  Platform
+                </label>
+                <input
+                  id="platform"
+                  type="text"
+                  value={platform}
+                  onChange={(e) => setPlatform(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div>
                 <label className="block text-primary_text font-bold mb-2">
                   Visibility
                 </label>
@@ -191,20 +205,20 @@ const AddPostPage = () => {
                 </div>
               </div>
               <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-                  >
-                    Add Post
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/dashboard")}
-                    className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                >
+                  Add Post
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate("/dashboard")}
+                  className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>

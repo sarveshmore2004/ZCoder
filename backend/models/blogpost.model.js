@@ -12,6 +12,7 @@ const blogPostSchema = new Schema({
   tags: { type: [String], default: [] },
   content: { type: String, required: true },
   visibility: { type: Boolean, required: true },
+  platform: {type: String, required: true},
   comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
 });
 

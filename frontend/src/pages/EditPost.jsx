@@ -22,6 +22,7 @@ const EditPost = () => {
   const [newTag, setNewTag] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [problemLink, setProblemLink] = useState("");
+  const [platform, setPlatform] = useState("");
 
   useEffect(() => {
     if (blogPost) {
@@ -34,6 +35,7 @@ const EditPost = () => {
         setTags(blogPost.tags);
         setIsPublic(blogPost.visibility);
         setProblemLink(blogPost.problemLink);
+        setPlatform(blogPost.platform);
       }
     }
   }, [blogPost, userId, navigate]);
@@ -46,6 +48,7 @@ const EditPost = () => {
       tags,
       problemLink,
       visibility: isPublic,
+      platform
     };
 
     await updateBlogPost(id, updatedPost);
@@ -140,7 +143,7 @@ const EditPost = () => {
                       {tag}
                       <button
                         type="button"
-                        className="ml-2 text-primary"
+                        className="ml-2 text-primary hover:text-tertiary"
                         onClick={() => handleTagRemove(index)}
                       >
                         &times;
@@ -179,6 +182,22 @@ const EditPost = () => {
                   type="url"
                   value={problemLink}
                   onChange={(e) => setProblemLink(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  className="block text-primary_text font-bold mb-2"
+                  htmlFor="platform"
+                >
+                  Platform
+                </label>
+                <input
+                  id="platform"
+                  type="text"
+                  value={platform}
+                  onChange={(e) => setPlatform(e.target.value)}
                   className="w-full p-2 border rounded-lg"
                   required
                 />

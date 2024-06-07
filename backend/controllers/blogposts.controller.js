@@ -5,8 +5,8 @@ import User from "../models/user.model.js";
 // Create a new blog post
 export const createBlogPost = async (req, res) => {
   try {
-    const { title, author, problemLink, tags, content, visibility } = req.body;
-    const newBlogPost = new BlogPost({ title, author, problemLink, tags, content, visibility });
+    const { title, author, problemLink, tags, content, visibility , platform} = req.body;
+    const newBlogPost = new BlogPost({ title, author, problemLink, tags, content, visibility , platform});
 
     if (!newBlogPost) {
       return res.status(404).json({ error: "Invalid blog data, can't create blog" });
@@ -77,7 +77,7 @@ export const getBlogPostById = async (req, res) => {
 // Update a blog post
 export const updateBlogPost = async (req, res) => {
   try {
-    const { title, problemLink, tags, content, visibility } = req.body;
+    const { title, problemLink, tags, content, visibility ,platform} = req.body;
     const blogPost = await BlogPost.findById(req.params.id);
     if (!blogPost) {
       return res.status(404).json({ message: "Blog post not found" });
@@ -88,6 +88,7 @@ export const updateBlogPost = async (req, res) => {
     blogPost.tags = tags;
     blogPost.content = content;
     blogPost.visibility = visibility;
+    blogPost.platform = platform;
 
     const updatedBlogPost = await blogPost.save();
     res.status(200).json(updatedBlogPost);

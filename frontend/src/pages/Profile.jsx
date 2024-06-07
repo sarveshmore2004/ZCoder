@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
-import { format } from "date-fns"; // Import date-fns for formatting dates
+import { format } from "date-fns";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -207,7 +207,7 @@ console.log(publicPosts)
                     {publicComments.map((comment, index) => (
                       <li key={index} className="mb-4 ">
                         <div className="flex items-center justify-between text-secondary_text  ">
-                          <Link to={`/dashboard/blog/${comment.postId}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
+                          <Link to={`/dashboard/blog/${comment.postId._id}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
                           <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
                               {comment.content}
                             </div>
