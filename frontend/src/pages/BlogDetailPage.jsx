@@ -17,6 +17,7 @@ import useDownvoteBlogPost from "../hooks/useDownvoteBlogPost";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
 import useIncrementBlogPostView from "../hooks/useIncrementBlogPostView";
+import formatDate from "../utils/formatDate";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
@@ -137,7 +138,7 @@ const BlogDetailPage = () => {
           <div className="flex items-center text-secondary_text mb-4">
             <p className="text-sm">by {blogPost.author.name}</p>
             <p className="text-sm ml-4">
-              {new Date(blogPost.date).toLocaleString()}
+              {formatDate(blogPost.date)}
             </p>
           </div>
           <p className="text-primary mb-4">
@@ -213,7 +214,7 @@ const BlogDetailPage = () => {
                       </p>
                     </Link>
                     <p className="text-secondary_text text-sm mb-2">
-                      {new Date(comment.date).toLocaleString()}
+                      {formatDate(comment.date)}
                     </p>
                   </div>
                   <p className="text-primary_text">{comment.content}</p>

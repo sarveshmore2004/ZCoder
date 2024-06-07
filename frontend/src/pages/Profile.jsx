@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
-import { format } from "date-fns";
+import formatDate from "../utils/formatDate";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -179,7 +179,7 @@ console.log(publicPosts)
                             </div>
                           </Link>
                           <span className="ml-2 text-xs flex gap-1 sm:text-sm">
-                            {format(new Date(post.date), 'Pp')}
+                            {formatDate(post.date)}
                             {post.visibility === true ? (
                               <FiUnlock className="ml-2 text-green-500" title="Public" />
                             ) : (
@@ -213,7 +213,7 @@ console.log(publicPosts)
                             </div>
                           </Link>
                           <span className="ml-2 text-xs flex gap-1 sm:text-sm">
-                            {format(new Date(comment.date), 'Pp')}
+                            {formatDate(comment.date)}
                             {comment.postId?.visibility === true ? (
                               <FiUnlock className="ml-2 text-green-500" title="Public" />
                             ) : (

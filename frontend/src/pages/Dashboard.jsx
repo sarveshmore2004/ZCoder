@@ -18,6 +18,7 @@ import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
 import { useAuth } from "@clerk/clerk-react";
+import formatDate from "../utils/formatDate";
 
 const DashboardPage = () => {
   const [sortMethod, setSortMethod] = useState("recent");
@@ -30,6 +31,7 @@ const DashboardPage = () => {
 
   const handleAddTag = (e) => {
     if (e.key === "Enter" || e.type === "click") {
+      setPage(1);
       e.preventDefault();
       if (
         newTag.trim() &&
@@ -44,7 +46,13 @@ const DashboardPage = () => {
   };
 
   const handleTagRemove = (index) => {
+    setPage(1);
     setTags(tags.filter((_, i) => i !== index));
+  };
+
+  const handlePlatformChange = (e) => {
+    setPage(1);
+    setPlatformFilter(e.target.value);
   };
 
   if (loading) {
@@ -125,7 +133,7 @@ const DashboardPage = () => {
                 className="input input-bordered w-full lg:w-auto"
                 placeholder="All Platforms"
                 value={platformFilter}
-                onChange={(e) => setPlatformFilter(e.target.value)}
+                onChange={handlePlatformChange}
               />
               {userId && (
                 <Link to="add-post">
@@ -188,7 +196,7 @@ const DashboardPage = () => {
                         </p>
                       </Link>
                       <p className="text-secondary_text text-sm ml-4">
-                        {new Date(blog.date).toLocaleString()}
+                        {formatDate(blog.date)}
                       </p>
                     </div>
                     <div className="flex items-center">
@@ -220,10 +228,10 @@ const DashboardPage = () => {
             >
               Previous
             </button>
-            <span className="px-4 py-2 mx-1">{`Page ${page} of ${totalPages}`}</span>
+            <span className="px-4 py-2 mx-1">{`Page ${totalPages===0?'0':page} of ${totalPages}`}</span>
             <button
               onClick={() => setPage(page + 1)}
-              disabled={page === totalPages}
+              disabled={page === totalPages || totalPages === 0}
               className="px-4 py-2 mx-1 bg-primary text-primary_text rounded-lg disabled:opacity-50"
             >
               Next
