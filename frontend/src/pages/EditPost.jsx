@@ -7,6 +7,15 @@ import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId.js";
 import useUpdateBlogPost from "../hooks/useUpdateBlogPost.js";
 import useDeleteBlogPost from "../hooks/useDeleteBlogPost.js";
 
+const getDomainFromUrl = (url) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname.replace('www.', '');
+  } catch (error) {
+    return '';
+  }
+};
+
 const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,7 +31,6 @@ const EditPost = () => {
   const [newTag, setNewTag] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [problemLink, setProblemLink] = useState("");
-  const [platform, setPlatform] = useState("");
 
   useEffect(() => {
     if (blogPost) {
@@ -35,7 +43,6 @@ const EditPost = () => {
         setTags(blogPost.tags);
         setIsPublic(blogPost.visibility);
         setProblemLink(blogPost.problemLink);
-        setPlatform(blogPost.platform);
       }
     }
   }, [blogPost, userId, navigate]);
@@ -48,7 +55,7 @@ const EditPost = () => {
       tags,
       problemLink,
       visibility: isPublic,
-      platform
+      platform: getDomainFromUrl(problemLink),
     };
 
     await updateBlogPost(id, updatedPost);
@@ -182,22 +189,6 @@ const EditPost = () => {
                   type="url"
                   value={problemLink}
                   onChange={(e) => setProblemLink(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  className="block text-primary_text font-bold mb-2"
-                  htmlFor="platform"
-                >
-                  Platform
-                </label>
-                <input
-                  id="platform"
-                  type="text"
-                  value={platform}
-                  onChange={(e) => setPlatform(e.target.value)}
                   className="w-full p-2 border rounded-lg"
                   required
                 />

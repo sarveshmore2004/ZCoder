@@ -8,7 +8,8 @@ import {
   deleteBlogPost,
   addCommentToBlogPost,
   upvoteBlogPost,
-  downvoteBlogPost
+  downvoteBlogPost,
+  incrementViews
 } from "../controllers/blogposts.controller.js";
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.route("/:id").get(getBlogPostById).put(updateBlogPost).delete(deleteBlogP
 router.post("/:id/comments", addCommentToBlogPost);
 router.put("/:id/upvote", upvoteBlogPost);
 router.put("/:id/downvote", downvoteBlogPost);
+router.put("/:id/views", incrementViews);
 
 export default router;

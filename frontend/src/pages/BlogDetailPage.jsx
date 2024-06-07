@@ -16,6 +16,7 @@ import useUpvoteBlogPost from "../hooks/useUpvoteBlogPost";
 import useDownvoteBlogPost from "../hooks/useDownvoteBlogPost";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
+import useIncrementBlogPostView from "../hooks/useIncrementBlogPostView";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
@@ -24,12 +25,15 @@ const BlogDetailPage = () => {
   const { addComment } = useAddCommentToBlogPost(id);
   const { upvote } = useUpvoteBlogPost(id);
   const { downvote } = useDownvoteBlogPost(id);
+  const { incrementView } = useIncrementBlogPostView(id);
   const [commentContent, setCommentContent] = useState("");
   const { userId, isLoaded: authLoaded } = useAuth();
   const { user, loading: userLoading } = useFetchUserById(userId);
   const [comments, setComments] = useState([]);
   const [upvoteCount, setUpvoteCount] = useState(0);
   const [downvoteCount, setDownvoteCount] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
+  const [hasviewed, setHasViewed] = useState(true);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
 
@@ -39,17 +43,21 @@ const BlogDetailPage = () => {
         setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
       }
       setComments(blogPost.comments);
+      setViewCount(blogPost.views.length);
       setUpvoteCount(blogPost.upvotes.length);
       setDownvoteCount(blogPost.downvotes.length);
+      if (!userLoading && user) {
+        setHasViewed(blogPost.views.includes(user._id));
+        if (!hasviewed) {
+          incrementView(user._id).then(() => {
+            setHasViewed(true);
+            setViewCount(viewCount + 1);})
+        }
+        setHasUpvoted(blogPost.upvotes.includes(user._id));
+        setHasDownvoted(blogPost.downvotes.includes(user._id));
+      }
     }
-  }, [postLoading, blogPost]);
-
-  useEffect(() => {
-    if (!userLoading && user && blogPost) {
-      setHasUpvoted(blogPost.upvotes.includes(user._id));
-      setHasDownvoted(blogPost.downvotes.includes(user._id));
-    }
-  }, [userLoading, user, blogPost]);
+  }, [userLoading, user, blogPost, postLoading]);
 
   if (postLoading || userLoading) {
     return <div>Loading...</div>;
@@ -159,7 +167,7 @@ const BlogDetailPage = () => {
               <FiMessageCircle className="mr-2" /> {comments.length}
             </span>
             <span className="flex items-center mr-4">
-              <FaEye className="mr-2" /> {blogPost.views}
+              <FaEye className="mr-2" /> {viewCount}
             </span>
           </div>
           <div className="mb-8">

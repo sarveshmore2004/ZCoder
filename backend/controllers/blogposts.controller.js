@@ -210,3 +210,24 @@ export const downvoteBlogPost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Incrementing views
+export const incrementViews = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const blogPost = await BlogPost.findById(req.params.id);
+    if (!blogPost) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    // Only add to views if the user hasn't viewed it before
+    if (!blogPost.views.includes(userId)) {
+      blogPost.views.push(userId);
+    }
+
+    const updatedBlogPost = await blogPost.save();
+    res.status(200).json(updatedBlogPost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

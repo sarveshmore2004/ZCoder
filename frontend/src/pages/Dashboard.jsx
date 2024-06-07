@@ -60,7 +60,7 @@ const DashboardPage = () => {
     const platformMatch =
       platformFilter === "" ||
       (blog.platform &&
-        blog.platform.toLowerCase() === platformFilter.toLowerCase());
+        blog.platform.toLowerCase().includes(platformFilter.toLowerCase()));
     return tagMatch && platformMatch;
   });
 
@@ -215,7 +215,7 @@ const DashboardPage = () => {
                         {blog.commentsCount}
                       </span>
                       <span className="flex items-center mr-4">
-                        <FaEye className="mr-2" /> {blog.views}
+                        <FaEye className="mr-2" /> {blog.views.length}
                       </span>
                     </div>
                   </div>
