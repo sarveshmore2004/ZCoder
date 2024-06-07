@@ -9,7 +9,7 @@ const blogPostSchema = new Schema({
   commentsCount: { type: Number, default: 0 },
   upvotes: { type: [Schema.Types.ObjectId], ref: "User"},
   downvotes: { type: [Schema.Types.ObjectId], ref: "User"},
-  views: [{ type: Schema.ObjectId, ref: 'User',  unique: true }],
+  views: { type: [Schema.Types.ObjectId], ref: "User"},
   tags: { type: [String], default: [] },
   content: { type: String, required: true },
   visibility: { type: Boolean, required: true },

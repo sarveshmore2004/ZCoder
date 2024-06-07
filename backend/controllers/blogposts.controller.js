@@ -16,6 +16,7 @@ export const createBlogPost = async (req, res) => {
 
     // Update user's bookmarks count and recent activity
     const user = await User.findById(author);
+
     if (user) {
       user.bookmarks += 1;
       user.recentActivity.posts.push(savedBlogPost._id);
@@ -226,17 +227,18 @@ export const downvoteBlogPost = async (req, res) => {
 export const incrementViews = async (req, res) => {
   try {
     const { userId } = req.body;
-    const blogPost = await BlogPost.findById(req.params.id);
-    if (!blogPost) {
+
+    // Use $addToSet to ensure the userId is only added if it's not already present
+    const updatedBlogPost = await BlogPost.findByIdAndUpdate(
+      req.params.id,
+      { $addToSet: { views: userId } },
+      { new: true }
+    );
+
+    if (!updatedBlogPost) {
       return res.status(404).json({ message: "Blog post not found" });
     }
 
-    // Only add to views if the user hasn't viewed it before
-    if (!blogPost.views.includes(userId)) {
-      blogPost.views.push(userId);
-    }
-
-    const updatedBlogPost = await blogPost.save();
     res.status(200).json(updatedBlogPost);
   } catch (error) {
     res.status(500).json({ message: error.message });
