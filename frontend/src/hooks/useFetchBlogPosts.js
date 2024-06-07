@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-const useFetchBlogPosts = (sortMethod = "recent", page = 1, limit = 5) => {
+const useFetchBlogPosts = (sortMethod = "recent", page = 1, limit = 5, tags = [], platform = "") => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -9,7 +9,8 @@ const useFetchBlogPosts = (sortMethod = "recent", page = 1, limit = 5) => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const res = await fetch(`/api/blogposts?sort=${sortMethod}&page=${page}&limit=${limit}`);
+        const tagsQuery = tags.join(',');
+        const res = await fetch(`/api/blogposts?sort=${sortMethod}&page=${page}&limit=${limit}&tags=${tagsQuery}&platform=${platform}`);
         const data = await res.json();
         setBlogPosts(data.blogPosts);
         setTotalPages(data.totalPages);
@@ -21,7 +22,7 @@ const useFetchBlogPosts = (sortMethod = "recent", page = 1, limit = 5) => {
     };
 
     fetchBlogPosts();
-  }, [sortMethod, page, limit]);
+  }, [sortMethod, page, limit, tags, platform]);
 
   return { blogPosts, loading, totalPages };
 };

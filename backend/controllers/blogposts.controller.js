@@ -30,7 +30,7 @@ export const createBlogPost = async (req, res) => {
 
 // Get all blog posts
 export const getAllBlogPosts = async (req, res) => {
-  const { sort, page, limit } = req.query; // Default page 1, limit 10
+  const { sort, page = 1, limit = 10, tags = '', platform = '' } = req.query;
   let sortOption;
 
   switch (sort) {
@@ -43,20 +43,30 @@ export const getAllBlogPosts = async (req, res) => {
     case "popularity":
       sortOption = { upvotes: -1 };
       break;
+    case "views":
+      sortOption = { views: -1 };
+      break;
     default:
       sortOption = { date: -1 };
   }
 
+  const tagArray = tags.split(',').filter(tag => tag); // Convert tags query to an array
   const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
+  const filter = {
+    visibility: true,
+    ...(tagArray.length > 0 && { tags: { $all: tagArray } }), // Filter by tags if provided
+    ...(platform && { platform: new RegExp(platform, 'i') }) // Filter by platform if provided
+  };
+
   try {
-    const blogPosts = await BlogPost.find({ visibility: true })
+    const blogPosts = await BlogPost.find(filter)
       .populate("author")
       .sort(sortOption)
       .skip(skip)
       .limit(parseInt(limit));
 
-    const totalPosts = await BlogPost.countDocuments({ visibility: true });
+    const totalPosts = await BlogPost.countDocuments(filter);
     const totalPages = Math.ceil(totalPosts / limit);
 
     res.status(200).json({ blogPosts, totalPages });
@@ -64,6 +74,7 @@ export const getAllBlogPosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 // Get a blog post by ID

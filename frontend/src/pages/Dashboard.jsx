@@ -25,7 +25,7 @@ const DashboardPage = () => {
   const [newTag, setNewTag] = useState("");
   const [platformFilter, setPlatformFilter] = useState("");
   const [page, setPage] = useState(1);
-  const { blogPosts: blogs, loading, totalPages } = useFetchBlogPosts(sortMethod, page);
+  const { blogPosts: blogs, loading, totalPages } = useFetchBlogPosts(sortMethod, page, 5, tags, platformFilter);
   const { userId } = useAuth();
 
   const handleAddTag = (e) => {
@@ -50,19 +50,6 @@ const DashboardPage = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  const filteredBlogs = blogs.filter((blog) => {
-    const tagMatch =
-      tags.length === 0 ||
-      tags.every((tag) =>
-        blog.tags.map((t) => t.toLowerCase()).includes(tag.toLowerCase())
-      );
-    const platformMatch =
-      platformFilter === "" ||
-      (blog.platform &&
-        blog.platform.toLowerCase().includes(platformFilter.toLowerCase()));
-    return tagMatch && platformMatch;
-  });
 
   return (
     <>
@@ -113,6 +100,7 @@ const DashboardPage = () => {
                 <option value="recent">Recent</option>
                 <option value="oldest">Oldest</option>
                 <option value="popularity">Popularity</option>
+                <option value="views">Most Viewed</option>
               </select>
               <div className="flex items-center">
                 <input
@@ -166,7 +154,7 @@ const DashboardPage = () => {
           </div>
           <section>
             <div className="space-y-8">
-              {filteredBlogs.map((blog) => (
+              {blogs.map((blog) => (
                 <div
                   key={blog._id}
                   className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80"
