@@ -6,6 +6,8 @@ const commentSchema = new Schema({
   content: { type: String, required: true },
   postId: { type: Schema.Types.ObjectId, ref: "BlogPost", required: true },
   date: { type: Date, default: Date.now },
+  upvotes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  downvotes: [{ type: Schema.Types.ObjectId, ref: "User" }]
 });
 
 const Comment = mongoose.model("Comment", commentSchema);

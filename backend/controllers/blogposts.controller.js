@@ -244,3 +244,41 @@ export const incrementViews = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Favorite a blog post
+export const favoriteBlogPost = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.favorites.includes(req.params.id)) {
+      user.favorites.push(req.params.id);
+      await user.save();
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Unfavorite a blog post
+export const unfavoriteBlogPost = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.favorites = user.favorites.filter(id => id.toString() !== req.params.id);
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
