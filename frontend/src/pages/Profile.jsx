@@ -207,7 +207,7 @@ console.log(publicPosts)
                     {publicComments.map((comment, index) => (
                       <li key={index} className="mb-4 ">
                         <div className="flex items-center justify-between text-secondary_text  ">
-                          <Link to={`/dashboard/blog/${comment.postId._id}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
+                          <Link to={`/dashboard/blog/${comment.postId?._id}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
                           <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
                               {comment.content}
                             </div>

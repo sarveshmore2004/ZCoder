@@ -30,7 +30,7 @@ export const createBlogPost = async (req, res) => {
 
 // Get all blog posts
 export const getAllBlogPosts = async (req, res) => {
-  const { sort } = req.query;
+  const { sort, page, limit } = req.query; // Default page 1, limit 10
   let sortOption;
 
   switch (sort) {
@@ -46,13 +46,25 @@ export const getAllBlogPosts = async (req, res) => {
     default:
       sortOption = { date: -1 };
   }
+
+  const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
   try {
-    const blogPosts = await BlogPost.find({visibility:{$eq:true}}).populate("author").sort(sortOption);
-    res.status(200).json(blogPosts);
+    const blogPosts = await BlogPost.find({ visibility: true })
+      .populate("author")
+      .sort(sortOption)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const totalPosts = await BlogPost.countDocuments({ visibility: true });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    res.status(200).json({ blogPosts, totalPages });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get a blog post by ID
 export const getBlogPostById = async (req, res) => {
