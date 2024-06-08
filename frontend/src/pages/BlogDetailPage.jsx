@@ -45,6 +45,7 @@ const BlogDetailPage = () => {
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showReplies, setShowReplies] = useState({});
 
   useEffect(() => {
     if (!postLoading && blogPost) {
@@ -155,8 +156,8 @@ const BlogDetailPage = () => {
   };
 
   const handleReplyClick = (comment) => {
-    setReplyingTo(comment._id)
-    setReplyContent(`@${comment.author.name} `)
+    setReplyingTo(comment._id);
+    setReplyContent(`@${comment.author.name} `);
   };
 
   const handleCommentUpvote = async (commentId, parentId, hasUpvoted) => {
@@ -223,13 +224,20 @@ const BlogDetailPage = () => {
     }
   };
 
+  const toggleShowReplies = (commentId) => {
+    setShowReplies((prevShowReplies) => ({
+      ...prevShowReplies,
+      [commentId]: !prevShowReplies[commentId],
+    }));
+  };
+
   const renderComments = (comments, parentId = id) => {
     return comments.filter(comment => comment.parentId === parentId).map(comment => (
       <div key={comment._id} className="p-4 mb-4 bg-primary/5 drop-shadow-xl rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <Link to={`/profile/${comment.author.clerkId}`} className="text-primary hover:underline">
-              {comment.author.name}
+            <Link to={`/${comment.author.clerkId}`} className="text-primary hover:underline">
+              {comment.author.clerkId === userId ? "You" : comment.author.name}
             </Link>
             <p className="text-secondary_text text-sm">{formatDate(comment.date)}</p>
           </div>
@@ -258,7 +266,23 @@ const BlogDetailPage = () => {
           </button>
         </div>
         <div className="ml-8">
-          {renderComments(comment.replies, comment._id)}
+          {showReplies[comment._id] && renderComments(comment.replies, comment._id)}
+          {!showReplies[comment._id] && comment.replies.length > 0 && (
+            <button
+              onClick={() => toggleShowReplies(comment._id)}
+              className="text-primary underline mt-2"
+            >
+              Show all replies ({comment.replies.length})
+            </button>
+          )}
+          {showReplies[comment._id] && comment.replies.length > 0 && (
+            <button
+              onClick={() => toggleShowReplies(comment._id)}
+              className="text-primary underline mt-2"
+            >
+              Hide replies
+            </button>
+          )}
           {replyingTo === comment._id && (
             <form onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)} className="mt-4">
               <textarea
