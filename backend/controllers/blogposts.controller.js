@@ -76,19 +76,36 @@ export const getAllBlogPosts = async (req, res) => {
   }
 };
 
-
-
 // Get a blog post by ID
 export const getBlogPostById = async (req, res) => {
+  const { sort = "recent" } = req.query;
+  let sortOption;
+
+  switch (sort) {
+    case "recent":
+      sortOption = { date: -1 };
+      break;
+    case "oldest":
+      sortOption = { date: 1 };
+      break;
+    case "popularity":
+      sortOption = { upvotes: -1 };
+      break;
+    default:
+      sortOption = { date: -1 };
+  }
+
   try {
     const blogPost = await BlogPost.findById(req.params.id)
       .populate("author", "name clerkId")
       .populate({
         path: 'comments',
+        options: { sort: sortOption },
         populate: {
-          path: 'author'
-        }
+          path: 'author',
+        },
       });
+
     if (!blogPost) {
       return res.status(404).json({ message: "Blog post not found" });
     }

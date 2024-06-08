@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { FiMessageCircle, FiBookmark, FiArrowUp, FiArrowDown, FiFilter } from "react-icons/fi";
+import { FiMessageCircle, FiBookmark, FiArrowUp, FiArrowDown } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { FaEdit, FaEye } from "react-icons/fa";
 import Header from "../components/Header";
@@ -20,7 +20,9 @@ import formatDate from "../utils/formatDate";
 const BlogDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { blogPost, loading: postLoading } = useFetchBlogPostbyId(id);
+  const [sortMethod, setSortMethod] = useState("recent");
+
+  const { blogPost, loading: postLoading } = useFetchBlogPostbyId(id, sortMethod);
   const { addComment } = useAddCommentToBlogPost(id);
   const { upvote } = useUpvoteBlogPost(id);
   const { downvote } = useDownvoteBlogPost(id);
@@ -40,12 +42,11 @@ const BlogDetailPage = () => {
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [sortOrder, setSortOrder] = useState("recent");
 
   useEffect(() => {
     if (!postLoading && blogPost) {
       if (!blogPost.visibility && blogPost.author.clerkId !== userId) {
-        setTimeout(() => navigate("/dashboard"), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
       }
       setComments(blogPost.comments);
       setViewCount(blogPost.views.length);
@@ -167,15 +168,6 @@ const BlogDetailPage = () => {
     }
   };
 
-  const sortedComments = [...comments].sort((a, b) => {
-    if (sortOrder === "recent") {
-      return new Date(b.date) - new Date(a.date);
-    } else if (sortOrder === "popular") {
-      return b.upvotes.length - a.upvotes.length;
-    }
-    return 0;
-  });
-
   return (
     <>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
@@ -255,30 +247,19 @@ const BlogDetailPage = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Comments</h2>
             <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setSortOrder("recent")}
-                className={`px-4 py-2 rounded-lg ${
-                  sortOrder === "recent"
-                    ? "bg-primary text-primary_text"
-                    : "bg-gray-200 text-gray-700"
-                }`}
+              <select
+                className="select select-bordered w-full lg:w-auto"
+                value={sortMethod}
+                onChange={(e) => setSortMethod(e.target.value)}
               >
-                Recent
-              </button>
-              <button
-                onClick={() => setSortOrder("popular")}
-                className={`px-4 py-2 rounded-lg ${
-                  sortOrder === "popular"
-                    ? "bg-primary text-primary_text"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
-                Popular
-              </button>
+                <option value="recent">Recent</option>
+                <option value="oldest">Oldest</option>
+                <option value="popularity">Popularity</option>
+              </select>
             </div>
           </div>
           <div className="space-y-4">
-            {sortedComments.map((comment, index) => (
+            {comments.map((comment, index) => (
               <div
                 key={index}
                 className="bg-background p-4 rounded-lg shadow border border-secondary/80"
