@@ -156,7 +156,7 @@ const BlogDetailPage = () => {
 
   const handleReplyClick = (comment) => {
     setReplyingTo(comment._id)
-    setReplyContent(`@${comment.author.name}`)
+    setReplyContent(`@${comment.author.name} `)
   };
 
   const handleCommentUpvote = async (commentId, parentId, hasUpvoted) => {

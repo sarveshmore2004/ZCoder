@@ -202,8 +202,9 @@ export const addCommentToBlogPost = async (req, res) => {
       user.recentActivity.comments.push(savedComment._id);
       await user.save();
     }
-
-    res.status(201).json(savedComment);
+    
+    const newSavedComment = await savedComment.populate('author')
+    res.status(201).json(newSavedComment);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
