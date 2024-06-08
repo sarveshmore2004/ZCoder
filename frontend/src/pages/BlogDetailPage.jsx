@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { FiMessageCircle, FiBookmark, FiArrowUp, FiArrowDown } from "react-icons/fi";
+import { FiMessageCircle, FiBookmark } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { FaEdit, FaEye } from "react-icons/fa";
+import { MdThumbUp, MdThumbDown } from "react-icons/md";
 import Header from "../components/Header";
 import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId";
 import useAddCommentToBlogPost from "../hooks/useAddCommentToBlogPost";
@@ -72,7 +73,7 @@ const BlogDetailPage = () => {
   if (postLoading || userLoading) {
     return <div>Loading...</div>;
   }
-console.log(comments)
+
   if (!blogPost.visibility && blogPost.author.clerkId !== userId) {
     return (
       <div className="bg-primary text-primary_text p-4 rounded mb-6">
@@ -154,112 +155,110 @@ console.log(comments)
   };
 
   const handleReplyClick = (comment) => {
-    setReplyingTo(comment._id )
+    setReplyingTo(comment._id)
     setReplyContent(`@${comment.author.name}`)
- };
- const handleCommentUpvote = async (commentId, parentId, hasUpvoted) => {
-  if (user && user._id && !hasUpvoted) {
-    await upvoteComment(commentId, user._id);
-    setComments(
-      comments.map((comment) => {
-        if (comment._id === commentId) {
-          return {
-            ...comment,
-            upvotes: [...comment.upvotes, user._id],
-            downvotes: comment.downvotes.filter((id) => id !== user._id),
-          };
-        } else if (comment._id === parentId) {
-          return {
-            ...comment,
-            replies: comment.replies.map((reply) => {
-              if (reply._id === commentId) {
-                return {
-                  ...reply,
-                  upvotes: [...reply.upvotes, user._id],
-                  downvotes: reply.downvotes.filter((id) => id !== user._id),
-                };
-              }
-              return reply;
-            }),
-          };
-        }
-        return comment;
-      })
-    );
-  }
-};
+  };
 
-const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
-  if (user && user._id && !hasDownvoted) {
-    await downvoteComment(commentId, user._id);
-    setComments(
-      comments.map((comment) => {
-        if (comment._id === commentId) {
-          return {
-            ...comment,
-            downvotes: [...comment.downvotes, user._id],
-            upvotes: comment.upvotes.filter((id) => id !== user._id),
-          };
-        } else if (comment._id === parentId) {
-          return {
-            ...comment,
-            replies: comment.replies.map((reply) => {
-              if (reply._id === commentId) {
-                return {
-                  ...reply,
-                  downvotes: [...reply.downvotes, user._id],
-                  upvotes: reply.upvotes.filter((id) => id !== user._id),
-                };
-              }
-              return reply;
-            }),
-          };
-        }
-        return comment;
-      })
-    );
-  }
-};
+  const handleCommentUpvote = async (commentId, parentId, hasUpvoted) => {
+    if (user && user._id && !hasUpvoted) {
+      await upvoteComment(commentId, user._id);
+      setComments(
+        comments.map((comment) => {
+          if (comment._id === commentId) {
+            return {
+              ...comment,
+              upvotes: [...comment.upvotes, user._id],
+              downvotes: comment.downvotes.filter((id) => id !== user._id),
+            };
+          } else if (comment._id === parentId) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) => {
+                if (reply._id === commentId) {
+                  return {
+                    ...reply,
+                    upvotes: [...reply.upvotes, user._id],
+                    downvotes: reply.downvotes.filter((id) => id !== user._id),
+                  };
+                }
+                return reply;
+              }),
+            };
+          }
+          return comment;
+        })
+      );
+    }
+  };
 
+  const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
+    if (user && user._id && !hasDownvoted) {
+      await downvoteComment(commentId, user._id);
+      setComments(
+        comments.map((comment) => {
+          if (comment._id === commentId) {
+            return {
+              ...comment,
+              downvotes: [...comment.downvotes, user._id],
+              upvotes: comment.upvotes.filter((id) => id !== user._id),
+            };
+          } else if (comment._id === parentId) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) => {
+                if (reply._id === commentId) {
+                  return {
+                    ...reply,
+                    downvotes: [...reply.downvotes, user._id],
+                    upvotes: reply.upvotes.filter((id) => id !== user._id),
+                  };
+                }
+                return reply;
+              }),
+            };
+          }
+          return comment;
+        })
+      );
+    }
+  };
 
   const renderComments = (comments, parentId = id) => {
     return comments.filter(comment => comment.parentId === parentId).map(comment => (
-      <div key={comment._id} className="comment">
-        <div className="flex gap-1">
-          <Link to={`/${comment.author.clerkId}`}>
-            <p className="text-secondary_text text-sm mb-2 underline">
+      <div key={comment._id} className="p-4 mb-4 bg-primary/5 drop-shadow-xl rounded-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <Link to={`/profile/${comment.author.clerkId}`} className="text-primary hover:underline">
               {comment.author.name}
-            </p>
-          </Link>
-          <p className="text-secondary_text text-sm mb-2">
-            {formatDate(comment.date)}
-          </p>
+            </Link>
+            <p className="text-secondary_text text-sm">{formatDate(comment.date)}</p>
+          </div>
         </div>
-        <p className="text-primary_text">{comment.content}</p>
-        <div className="flex items-center text-secondary_text mt-2">
+        <p className="text-primary_text mt-2">{comment.content}</p>
+        <div className="flex items-center mt-2 text-secondary_text">
           <span className="flex items-center mr-4">
-            <FiArrowUp
-              className={`mr-2 ${comment.upvotes.includes(user?._id) ? "text-primary" : ""}`}
+            <MdThumbUp
+              className={`mr-2 cursor-pointer ${comment.upvotes.includes(user?._id) ? "text-primary" : ""}`}
               onClick={() => handleCommentUpvote(comment._id, comment.parentId, comment.upvotes.includes(user?._id))}
             />
             {comment.upvotes.length}
           </span>
           <span className="flex items-center mr-4">
-            <FiArrowDown
-              className={`mr-2 ${comment.downvotes.includes(user?._id) ? "text-primary" : ""}`}
+            <MdThumbDown
+              className={`mr-2 cursor-pointer ${comment.downvotes.includes(user?._id) ? "text-primary" : ""}`}
               onClick={() => handleCommentDownvote(comment._id, comment.parentId, comment.downvotes.includes(user?._id))}
             />
             {comment.downvotes.length}
           </span>
           <button
-            onClick={()=> handleReplyClick(comment)}
+            onClick={() => handleReplyClick(comment)}
             className="text-primary underline"
           >
             Reply
           </button>
         </div>
         <div className="ml-8">
-          {comment.parentId === id && renderComments(comment.replies, comment._id)}
+          {renderComments(comment.replies, comment._id)}
           {replyingTo === comment._id && (
             <form onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)} className="mt-4">
               <textarea
@@ -289,7 +288,7 @@ const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
         <Header />
       </div>
       <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col items-center">
-        <div className="w-full lg:w-2/3 bg-background p-4 rounded-lg shadow-lg">
+        <div className="w-full lg:w-2/3 bg-background p-6 rounded-lg shadow-lg">
           <div className="mt-4 self-start flex flex-wrap items-center justify-between">
             <Link to="/dashboard" className="text-primary underline flex items-center">
               <IoArrowBack className="text-primary " />
@@ -310,7 +309,7 @@ const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
           </div>
           <p className="text-primary mb-4">
             Problem Link:{" "}
-            <a href={blogPost.problemLink} className="text-primary underline">
+            <a href={blogPost.problemLink} className="text-primary underline truncate block">
               {blogPost.problemLink}
             </a>
           </p>
@@ -326,15 +325,15 @@ const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
           </div>
           <div className="flex items-center text-secondary_text mb-4">
             <span className="flex items-center mr-4">
-              <FiArrowUp
-                className={`mr-2 ${hasUpvoted ? "text-primary" : ""}`}
+              <MdThumbUp
+                className={`mr-2 cursor-pointer ${hasUpvoted ? "text-primary" : ""}`}
                 onClick={handleUpvote}
               />
               {upvoteCount}
             </span>
             <span className="flex items-center mr-4">
-              <FiArrowDown
-                className={`mr-2 ${hasDownvoted ? "text-primary" : ""}`}
+              <MdThumbDown
+                className={`mr-2 cursor-pointer ${hasDownvoted ? "text-primary" : ""}`}
                 onClick={handleDownvote}
               />
               {downvoteCount}
@@ -347,7 +346,7 @@ const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
             </span>
             <span className="flex items-center mr-4">
               <FiBookmark
-                className={`mr-2 ${isFavorite ? "text-primary" : ""}`}
+                className={`mr-2 cursor-pointer ${isFavorite ? "text-primary" : ""}`}
                 onClick={isFavorite ? handleUnfavorite : handleFavorite}
               />
               {isFavorite ? "Unfavorite" : "Favorite"}
