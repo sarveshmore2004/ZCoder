@@ -52,7 +52,6 @@ const BlogDetailPage = () => {
       setViewCount(blogPost.views.length);
       setUpvoteCount(blogPost.upvotes.length);
       setDownvoteCount(blogPost.downvotes.length);
-      setIsFavorite(blogPost.favorites?.includes(userId));
       if (!userLoading && user) {
         setHasViewed(blogPost.views.includes(user._id));
         if (!hasViewed) {
@@ -61,6 +60,7 @@ const BlogDetailPage = () => {
             setViewCount(viewCount + 1);
           });
         }
+        setIsFavorite(user.favorites.some((favPost) => favPost._id === id));
         setHasUpvoted(blogPost.upvotes.includes(user._id));
         setHasDownvoted(blogPost.downvotes.includes(user._id));
       }

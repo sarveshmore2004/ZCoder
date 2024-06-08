@@ -22,6 +22,8 @@ const Profile = () => {
 
   let publicPosts = user?.recentActivity?.posts.toReversed();
   let publicComments = user?.recentActivity?.comments.toReversed();
+  let favoritePosts = user?.favorites;
+
   if (isLoaded && userId !== userid) {
     publicPosts = user?.recentActivity?.posts?.filter(
       (post) => post.visibility === true
@@ -31,6 +33,9 @@ const Profile = () => {
       (comment) => comment.postId?.visibility === true
     ) || [];
 
+    favoritePosts = user?.favorites?.filter(
+      (post) => post.visibility === true || post.author === user._id
+    ) || [];
   }
 
 
@@ -215,6 +220,40 @@ console.log(publicPosts)
                           <span className="ml-2 text-xs flex gap-1 sm:text-sm">
                             {formatDate(comment.date)}
                             {comment.postId?.visibility === true ? (
+                              <FiUnlock className="ml-2 text-green-500" title="Public" />
+                            ) : (
+                              <FiLock className="ml-2 text-red-500" title="Private" />
+                            )}
+                          </span>
+                        </div>
+                        <div className="divider m-0"></div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <input
+                  type="radio"
+                  name="my_tabs_2"
+                  role="tab"
+                  className="tab hover:bg-border hover:text-primary"
+                  aria-label="Favorites"
+                />
+                <div
+                  role="tabpanel"
+                  className="tab-content bg-background border-secondary rounded-box p-6"
+                >
+                  <ul>
+                    {favoritePosts.map((post, index) => (
+                      <li key={index} className="mb-4">
+                        <div className="flex items-center justify-between text-secondary_text">
+                          <Link to={`/dashboard/blog/${post._id}`} className=" w-24 sm:w-full sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl">
+                            <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary truncate ">
+                              {post.title}
+                            </div>
+                          </Link>
+                          <span className="ml-2 text-xs flex gap-1 sm:text-sm">
+                            {formatDate(post.date)}
+                            {post.visibility === true ? (
                               <FiUnlock className="ml-2 text-green-500" title="Public" />
                             ) : (
                               <FiLock className="ml-2 text-red-500" title="Private" />

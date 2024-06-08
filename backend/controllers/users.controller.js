@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 
 // Get all users
 const getUsers = async (req, res) => {
-  const { page = 1, limit , search = "" } = req.query;
+  const { page = 1, limit, search = "" } = req.query;
   const skip = (page - 1) * limit;
   const searchQuery = search ? { name: { $regex: search, $options: "i" } } : {};
 
@@ -17,7 +17,6 @@ const getUsers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -40,13 +39,21 @@ const createUser = async (req, res) => {
 // Get user by clerkId
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findOne({ clerkId: req.params.id }).populate({
-      path: 'recentActivity.comments',
-      populate: {
-        path: 'postId',
-        select: 'visibility'
-      }
-    }).populate("recentActivity.posts");
+    const user = await User.findOne({ clerkId: req.params.id })
+      .populate({
+        path: 'recentActivity.comments',
+        populate: {
+          path: 'postId',
+          select: 'visibility'
+        }
+      })
+      .populate('recentActivity.posts')
+      .populate({
+        path: 'favorites',
+        options: { sort: {date : -1} }
+      })
+      
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
