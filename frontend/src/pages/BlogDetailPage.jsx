@@ -266,7 +266,6 @@ const BlogDetailPage = () => {
           </button>
         </div>
         <div className="ml-8">
-          {showReplies[comment._id] && renderComments(comment.replies, comment._id)}
           {!showReplies[comment._id] && comment.replies.length > 0 && (
             <button
               onClick={() => toggleShowReplies(comment._id)}
@@ -283,6 +282,7 @@ const BlogDetailPage = () => {
               Hide replies
             </button>
           )}
+          {showReplies[comment._id] && renderComments(comment.replies, comment._id)}
           {replyingTo === comment._id && (
             <form onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)} className="mt-4">
               <textarea
@@ -328,7 +328,12 @@ const BlogDetailPage = () => {
           </div>
           <h1 className="text-3xl font-bold mb-4">{blogPost.title}</h1>
           <div className="flex items-center text-secondary_text mb-4">
-            <p className="text-sm">by {blogPost.author.name}</p>
+            <pre>by </pre>
+            <Link to={`/${blogPost.author.clerkId}`}>
+              <p className="text-secondary_text text-sm hover:underline">
+                {blogPost.author.clerkId === userId ? "You" : blogPost.author.name}
+              </p>
+            </Link>
             <p className="text-sm ml-4">{formatDate(blogPost.date)}</p>
           </div>
           <p className="text-primary mb-4">
@@ -377,7 +382,7 @@ const BlogDetailPage = () => {
             </span>
           </div>
           <div className="mb-8">
-            <p>{blogPost.content}</p>
+            <pre>{blogPost.content}</pre>
           </div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Comments</h2>

@@ -192,7 +192,7 @@ const DashboardPage = () => {
                     <div className="flex items-center mb-2 sm:mb-0">
                       <Link to={`/${blog.author.clerkId}`}>
                         <p className="text-secondary_text text-sm hover:underline">
-                          {blog.author.name}
+                          {blog.author.clerkId === userId ? "You" : blog.author.name}
                         </p>
                       </Link>
                       <p className="text-secondary_text text-sm ml-4">
