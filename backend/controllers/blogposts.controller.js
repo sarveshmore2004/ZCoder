@@ -101,9 +101,13 @@ export const getBlogPostById = async (req, res) => {
       .populate({
         path: 'comments',
         options: { sort: sortOption },
-        populate: {
-          path: 'author',
-        },
+        populate: [
+          { path: 'author', select: 'name clerkId' },
+          {
+            path: 'replies',
+            populate: { path: 'author', select: 'name clerkId' }
+          }
+        ]
       });
 
     if (!blogPost) {
@@ -161,24 +165,35 @@ export const deleteBlogPost = async (req, res) => {
 // Add a comment to a blog post
 export const addCommentToBlogPost = async (req, res) => {
   try {
-    const { content, author } = req.body;
-    const blogPost = await BlogPost.findById(req.params.id);
-    if (!blogPost) {
-      return res.status(404).json({ message: "Blog post not found" });
+    const { content, author, parentId } = req.body;
+    const blogPostId = req.params.id;
+
+    let parentComment;
+    if (parentId) {
+      parentComment = await Comment.findById(parentId);
+      if (!parentComment) {
+        return res.status(404).json({ message: "Parent comment not found" });
+      }
     }
 
-    const postId = req.params.id;
-    const newComment = new Comment({ content, author, postId });
-
-    if (!newComment) {
-      return res.status(404).json({ error: "Invalid comment data, can't create comment" });
-    }
+    const newComment = new Comment({
+      content,
+      author,
+      postId: blogPostId,
+      parentId: parentComment ? parentComment._id : blogPostId,
+    });
 
     const savedComment = await newComment.save();
 
-    blogPost.comments.push(savedComment._id);
-    blogPost.commentsCount += 1;
-    await blogPost.save();
+    if (parentComment) {
+      parentComment.replies.push(savedComment._id);
+      await parentComment.save();
+    } else {
+      const blogPost = await BlogPost.findById(blogPostId);
+      blogPost.comments.push(savedComment._id);
+      blogPost.commentsCount += 1;
+      await blogPost.save();
+    }
 
     // Update user's comments count and recent activity
     const user = await User.findById(author);
@@ -193,6 +208,7 @@ export const addCommentToBlogPost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Upvote a blog post
 export const upvoteBlogPost = async (req, res) => {

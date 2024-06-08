@@ -32,6 +32,8 @@ const BlogDetailPage = () => {
   const { upvoteComment } = useUpvoteComment(id);
   const { downvoteComment } = useDownvoteComment(id);
   const [commentContent, setCommentContent] = useState("");
+  const [replyContent, setReplyContent] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
   const { userId, isLoaded: authLoaded } = useAuth();
   const { user, loading: userLoading } = useFetchUserById(userId);
   const [comments, setComments] = useState([]);
@@ -70,7 +72,7 @@ const BlogDetailPage = () => {
   if (postLoading || userLoading) {
     return <div>Loading...</div>;
   }
-
+console.log(comments)
   if (!blogPost.visibility && blogPost.author.clerkId !== userId) {
     return (
       <div className="bg-primary text-primary_text p-4 rounded mb-6">
@@ -91,6 +93,25 @@ const BlogDetailPage = () => {
         setComments([...comments, newComment]);
       }
       setCommentContent("");
+    }
+  };
+
+  const handleReplySubmit = async (e, parentId) => {
+    e.preventDefault();
+    if (user && user._id && parentId) {
+      const newReply = await addComment(replyContent, user._id, parentId);
+      if (newReply) {
+        setComments(
+          comments.map((comment) => {
+            if (comment._id === parentId) {
+              return { ...comment, replies: [...comment.replies, newReply] };
+            }
+            return comment;
+          })
+        );
+        setReplyingTo(null);
+        setReplyContent("");
+      }
     }
   };
 
@@ -132,40 +153,134 @@ const BlogDetailPage = () => {
     }
   };
 
-  const handleCommentUpvote = async (commentId, hasUpvoted) => {
-    if (user && user._id && !hasUpvoted) {
-      await upvoteComment(commentId, user._id);
-      setComments(
-        comments.map((comment) => {
-          if (comment._id === commentId) {
-            return {
-              ...comment,
-              upvotes: [...comment.upvotes, user._id],
-              downvotes: comment.downvotes.filter((id) => id !== user._id),
-            };
-          }
-          return comment;
-        })
-      );
-    }
-  };
+  const handleReplyClick = (comment) => {
+    setReplyingTo(comment._id )
+    setReplyContent(`@${comment.author.name}`)
+ };
+ const handleCommentUpvote = async (commentId, parentId, hasUpvoted) => {
+  if (user && user._id && !hasUpvoted) {
+    await upvoteComment(commentId, user._id);
+    setComments(
+      comments.map((comment) => {
+        if (comment._id === commentId) {
+          return {
+            ...comment,
+            upvotes: [...comment.upvotes, user._id],
+            downvotes: comment.downvotes.filter((id) => id !== user._id),
+          };
+        } else if (comment._id === parentId) {
+          return {
+            ...comment,
+            replies: comment.replies.map((reply) => {
+              if (reply._id === commentId) {
+                return {
+                  ...reply,
+                  upvotes: [...reply.upvotes, user._id],
+                  downvotes: reply.downvotes.filter((id) => id !== user._id),
+                };
+              }
+              return reply;
+            }),
+          };
+        }
+        return comment;
+      })
+    );
+  }
+};
 
-  const handleCommentDownvote = async (commentId, hasDownvoted) => {
-    if (user && user._id && !hasDownvoted) {
-      await downvoteComment(commentId, user._id);
-      setComments(
-        comments.map((comment) => {
-          if (comment._id === commentId) {
-            return {
-              ...comment,
-              downvotes: [...comment.downvotes, user._id],
-              upvotes: comment.upvotes.filter((id) => id !== user._id),
-            };
-          }
-          return comment;
-        })
-      );
-    }
+const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
+  if (user && user._id && !hasDownvoted) {
+    await downvoteComment(commentId, user._id);
+    setComments(
+      comments.map((comment) => {
+        if (comment._id === commentId) {
+          return {
+            ...comment,
+            downvotes: [...comment.downvotes, user._id],
+            upvotes: comment.upvotes.filter((id) => id !== user._id),
+          };
+        } else if (comment._id === parentId) {
+          return {
+            ...comment,
+            replies: comment.replies.map((reply) => {
+              if (reply._id === commentId) {
+                return {
+                  ...reply,
+                  downvotes: [...reply.downvotes, user._id],
+                  upvotes: reply.upvotes.filter((id) => id !== user._id),
+                };
+              }
+              return reply;
+            }),
+          };
+        }
+        return comment;
+      })
+    );
+  }
+};
+
+
+  const renderComments = (comments, parentId = id) => {
+    return comments.filter(comment => comment.parentId === parentId).map(comment => (
+      <div key={comment._id} className="comment">
+        <div className="flex gap-1">
+          <Link to={`/${comment.author.clerkId}`}>
+            <p className="text-secondary_text text-sm mb-2 underline">
+              {comment.author.name}
+            </p>
+          </Link>
+          <p className="text-secondary_text text-sm mb-2">
+            {formatDate(comment.date)}
+          </p>
+        </div>
+        <p className="text-primary_text">{comment.content}</p>
+        <div className="flex items-center text-secondary_text mt-2">
+          <span className="flex items-center mr-4">
+            <FiArrowUp
+              className={`mr-2 ${comment.upvotes.includes(user?._id) ? "text-primary" : ""}`}
+              onClick={() => handleCommentUpvote(comment._id, comment.parentId, comment.upvotes.includes(user?._id))}
+            />
+            {comment.upvotes.length}
+          </span>
+          <span className="flex items-center mr-4">
+            <FiArrowDown
+              className={`mr-2 ${comment.downvotes.includes(user?._id) ? "text-primary" : ""}`}
+              onClick={() => handleCommentDownvote(comment._id, comment.parentId, comment.downvotes.includes(user?._id))}
+            />
+            {comment.downvotes.length}
+          </span>
+          <button
+            onClick={()=> handleReplyClick(comment)}
+            className="text-primary underline"
+          >
+            Reply
+          </button>
+        </div>
+        <div className="ml-8">
+          {comment.parentId === id && renderComments(comment.replies, comment._id)}
+          {replyingTo === comment._id && (
+            <form onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)} className="mt-4">
+              <textarea
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                className="w-full p-2 border rounded-lg"
+                rows="2"
+                placeholder="Add a reply..."
+                required
+              />
+              <button
+                type="submit"
+                className="mt-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+              >
+                Add Reply
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -176,10 +291,7 @@ const BlogDetailPage = () => {
       <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col items-center">
         <div className="w-full lg:w-2/3 bg-background p-4 rounded-lg shadow-lg">
           <div className="mt-4 self-start flex flex-wrap items-center justify-between">
-            <Link
-              to="/dashboard"
-              className="text-primary underline flex items-center"
-            >
+            <Link to="/dashboard" className="text-primary underline flex items-center">
               <IoArrowBack className="text-primary " />
               Back to Dashboard
             </Link>
@@ -258,60 +370,6 @@ const BlogDetailPage = () => {
               </select>
             </div>
           </div>
-          <div className="space-y-4">
-            {comments.map((comment, index) => (
-              <div
-                key={index}
-                className="bg-background p-4 rounded-lg shadow border border-secondary/80"
-              >
-                <div className="flex gap-1">
-                  <Link to={`/${comment.author.clerkId}`}>
-                    <p className="text-secondary_text text-sm mb-2 underline">
-                      {comment.author.name}
-                    </p>
-                  </Link>
-                  <p className="text-secondary_text text-sm mb-2">
-                    {formatDate(comment.date)}
-                  </p>
-                </div>
-                <p className="text-primary_text">{comment.content}</p>
-                <div className="flex items-center text-secondary_text mt-2">
-                  <span className="flex items-center mr-4">
-                    <FiArrowUp
-                      className={`mr-2 ${
-                        comment.upvotes.includes(user?._id)
-                          ? "text-primary"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        handleCommentUpvote(
-                          comment._id,
-                          comment.upvotes.includes(user?._id)
-                        )
-                      }
-                    />
-                    {comment.upvotes.length}
-                  </span>
-                  <span className="flex items-center mr-4">
-                    <FiArrowDown
-                      className={`mr-2 ${
-                        comment.downvotes.includes(user?._id)
-                          ? "text-primary"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        handleCommentDownvote(
-                          comment._id,
-                          comment.downvotes.includes(user?._id)
-                        )
-                      }
-                    />
-                    {comment.downvotes.length}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
           {userId && (
             <form onSubmit={handleCommentSubmit} className="mt-4">
               <textarea
@@ -330,6 +388,9 @@ const BlogDetailPage = () => {
               </button>
             </form>
           )}
+          <div className="space-y-4">
+            {renderComments(comments)}
+          </div>
         </div>
       </div>
     </>

@@ -5,16 +5,16 @@ const blogPostSchema = new Schema({
   title: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   date: { type: Date, default: Date.now },
-  problemLink: { type: String , default: ""},
+  problemLink: { type: String, default: "" },
   commentsCount: { type: Number, default: 0 },
-  upvotes: { type: [Schema.Types.ObjectId], ref: "User"},
-  downvotes: { type: [Schema.Types.ObjectId], ref: "User"},
-  views: { type: [Schema.Types.ObjectId], ref: "User"},
+  upvotes: { type: [Schema.Types.ObjectId], ref: "User" },
+  downvotes: { type: [Schema.Types.ObjectId], ref: "User" },
+  views: { type: [Schema.Types.ObjectId], ref: "User" },
   tags: { type: [String], default: [] },
   content: { type: String, required: true },
   visibility: { type: Boolean, required: true },
-  platform: {type: String, required: true},
-  comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
+  platform: { type: String, required: true },
+  comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] }
 });
 
 const BlogPost = mongoose.model("BlogPost", blogPostSchema);
