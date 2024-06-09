@@ -4,6 +4,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa";
 import useCreateUser from "../hooks/useCreateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
+import Spinner from "../components/spinner.jsx";
 
 const NewUserSetup = () => {
   const { userId, isLoaded } = useAuth();
@@ -101,7 +102,7 @@ const NewUserSetup = () => {
   return (
     <>
       {!isLoaded || loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <div className="min-h-screen bg-background text-primary_text p-4 flex justify-center items-center">
           <div className="w-full max-w-2xl bg-background p-8 rounded-lg shadow-lg">

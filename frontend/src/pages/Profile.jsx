@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import useFetchUserById from "../hooks/useFetchUserById";
 import formatDate from "../utils/formatDate";
+import Spinner from "../components/spinner";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const Profile = () => {
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
         <Header />
       </div>
-      {loading && <p>Loading...</p>}
+      {loading && <Spinner />}
       {!loading && !user && <p>User not found</p>}
       {isLoaded && user && (
         <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col lg:flex-row items-start">

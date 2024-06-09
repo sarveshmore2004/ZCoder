@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
 import { useAuth } from "@clerk/clerk-react";
 import formatDate from "../utils/formatDate";
+import Spinner from "../components/spinner";
 
 const DashboardPage = () => {
   const [sortMethod, setSortMethod] = useState("recent");
@@ -56,7 +57,7 @@ const DashboardPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return (

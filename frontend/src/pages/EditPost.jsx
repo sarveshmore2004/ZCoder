@@ -6,6 +6,7 @@ import { FaPaperPlane } from "react-icons/fa";
 import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId.js";
 import useUpdateBlogPost from "../hooks/useUpdateBlogPost.js";
 import useDeleteBlogPost from "../hooks/useDeleteBlogPost.js";
+import Spinner from "../components/spinner.jsx";
 
 const getDomainFromUrl = (url) => {
   try {
@@ -94,7 +95,7 @@ const EditPost = () => {
       <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col items-center">
         <div className="w-full lg:w-2/3 bg-background p-4 rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold mb-4">Edit Post</h1>
-          {loading && <p>Loading...</p>}
+          {loading && <Spinner />}
           {!loading && showError && (
             <div className="bg-primary text-primary_text p-4 rounded mb-6">
               Unauthorized access! Redirecting to the current Post...

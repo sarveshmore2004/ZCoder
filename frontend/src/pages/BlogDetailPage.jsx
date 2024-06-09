@@ -17,6 +17,7 @@ import useIncrementBlogPostView from "../hooks/useIncrementBlogPostView";
 import useFavoriteBlogPost from "../hooks/useFavoriteBlogPost";
 import useUnfavoriteBlogPost from "../hooks/useUnfavoriteBlogPost";
 import formatDate from "../utils/formatDate";
+import Spinner from "../components/spinner";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
@@ -72,7 +73,7 @@ const BlogDetailPage = () => {
   }, [userLoading, user, blogPost, postLoading]);
 
   if (postLoading || userLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   if (!blogPost.visibility && blogPost.author.clerkId !== userId) {

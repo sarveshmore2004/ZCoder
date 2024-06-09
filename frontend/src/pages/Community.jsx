@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaHome, FaQuestionCircle, FaTags, FaUsers } from "react-icons/fa";
 import Header from "../components/Header";
 import useFetchUsers from "../hooks/useFetchUsers";
+import Spinner from "../components/spinner";
 
 const CommunityPage = () => {
   const [page, setPage] = useState(1);
@@ -62,7 +63,7 @@ const CommunityPage = () => {
           </header>
 
           {loading ? (
-            <p>Loading...</p>
+            <Spinner />
           ) : (
             <section>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

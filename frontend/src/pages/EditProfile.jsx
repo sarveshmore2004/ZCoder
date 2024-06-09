@@ -5,6 +5,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa"; // Importing the plus icon
 import useUpdateUser from "../hooks/useUpdateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
+import Spinner from "../components/spinner.jsx";
 
 const EditProfile = () => {
   const { userId, isLoaded } = useAuth();
@@ -121,7 +122,7 @@ const EditProfile = () => {
 
   return (
     <>
-      {(!isLoaded || loading) && <p>Loading...</p>}
+      {(!isLoaded || loading) && <Spinner />}
       {isLoaded && fetchedUser && (
         <>
           <div className="w-full flex justify-center bg-background drop-shadow-2xl">
