@@ -31,7 +31,7 @@ export const createBlogPost = async (req, res) => {
 
 // Get all blog posts
 export const getAllBlogPosts = async (req, res) => {
-  const { sort, page = 1, limit = 10, tags = '', platform = '' } = req.query;
+  const { sort, page = 1, limit = 10, tags = '', platform = '', problemLink = '' } = req.query;
   let sortOption;
 
   switch (sort) {
@@ -57,7 +57,8 @@ export const getAllBlogPosts = async (req, res) => {
   const filter = {
     visibility: true,
     ...(tagArray.length > 0 && { tags: { $all: tagArray } }), // Filter by tags if provided
-    ...(platform && { platform: new RegExp(platform, 'i') }) // Filter by platform if provided
+    ...(platform && { platform: new RegExp(platform, 'i') }), // Filter by platform if provided
+    ...(problemLink && { problemLink: new RegExp(problemLink, 'i') }) // Filter by problem link if provided
   };
 
   try {
@@ -75,6 +76,7 @@ export const getAllBlogPosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get a blog post by ID
 export const getBlogPostById = async (req, res) => {
@@ -184,12 +186,15 @@ export const addCommentToBlogPost = async (req, res) => {
     });
 
     const savedComment = await newComment.save();
+    const blogPost = await BlogPost.findById(blogPostId);
 
     if (parentComment) {
       parentComment.replies.push(savedComment._id);
-      await parentComment.save();
+      blogPost.commentsCount += 1;
+      await Promise.all([parentComment.save(), blogPost.save()]);
+      // await parentComment.save();
+      // await blogPost.save();
     } else {
-      const blogPost = await BlogPost.findById(blogPostId);
       blogPost.comments.push(savedComment._id);
       blogPost.commentsCount += 1;
       await blogPost.save();

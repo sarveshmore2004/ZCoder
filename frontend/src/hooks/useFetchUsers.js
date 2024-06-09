@@ -8,6 +8,7 @@ const useFetchUsers = ( search = "" ,page = 1, limit = 2) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true)
       try {
         const res = await fetch(`/api/users?page=${page}&limit=${limit}&search=${search}`);
         const data = await res.json();
