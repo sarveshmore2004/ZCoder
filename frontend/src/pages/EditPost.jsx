@@ -110,7 +110,7 @@ const EditPost = () => {
                 >
                   Title
                 </label>
-                <input
+                <input autoFocus
                   id="title"
                   type="text"
                   value={title}
@@ -130,7 +130,7 @@ const EditPost = () => {
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full p-2 border rounded-lg text-sm"
                   rows="10"
                   required
                 />

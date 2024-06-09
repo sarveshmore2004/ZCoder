@@ -19,6 +19,9 @@ import useUnfavoriteBlogPost from "../hooks/useUnfavoriteBlogPost";
 import formatDate from "../utils/formatDate";
 import Spinner from "../components/spinner";
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 const BlogDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -232,6 +235,48 @@ const BlogDetailPage = () => {
     }));
   };
 
+  
+  const renderContentWithHighlighting = (content) => {
+    const lines = content.split('\n');
+    const codeBlockPattern = /^```(\w+)?\s*$/;
+    let inCodeBlock = false;
+    let language = '';
+    let currentCodeBlock = [];
+    const result = [];
+
+    lines.forEach((line, index) => {
+      const match = line.match(codeBlockPattern);
+      if (match) {
+        if (inCodeBlock) {
+          result.push(
+            <SyntaxHighlighter language={language} style={darcula} key={`codeblock-${index}`}>
+              {currentCodeBlock.join('\n')}
+            </SyntaxHighlighter>
+          );
+          currentCodeBlock = [];
+          inCodeBlock = false;
+        } else {
+          inCodeBlock = true;
+          language = match[1] || 'text';
+        }
+      } else if (inCodeBlock) {
+        currentCodeBlock.push(line);
+      } else {
+        result.push(<p key={`line-${index}`}>{line}</p>);
+      }
+    });
+
+    if (currentCodeBlock.length > 0) {
+      result.push(
+        <SyntaxHighlighter language={language} style={darcula} key={`codeblock-${lines.length}`}>
+          {currentCodeBlock.join('\n')}
+        </SyntaxHighlighter>
+      );
+    }
+
+    return result;
+  };
+
   const renderComments = (comments, parentId = id) => {
     return comments.filter(comment => comment.parentId === parentId).map(comment => (
       <div key={comment._id} className="p-4 mb-4 bg-primary/5 drop-shadow-xl rounded-lg">
@@ -243,7 +288,7 @@ const BlogDetailPage = () => {
             <p className="text-secondary_text text-sm">{formatDate(comment.date)}</p>
           </div>
         </div>
-        <p className="text-primary_text mt-2">{comment.content}</p>
+        <p className="text-primary_text mt-2">{renderContentWithHighlighting(comment.content)}</p>
         <div className="flex items-center mt-2 text-secondary_text">
           <span className="flex items-center mr-4">
             <MdThumbUp
@@ -306,6 +351,8 @@ const BlogDetailPage = () => {
       </div>
     ));
   };
+
+
 
   return (
     <>
@@ -383,7 +430,7 @@ const BlogDetailPage = () => {
             </span>
           </div>
           <div className="mb-8">
-            <pre className=" whitespace-pre-wrap">{blogPost.content}</pre>
+          {renderContentWithHighlighting(blogPost.content)}
           </div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Comments</h2>
