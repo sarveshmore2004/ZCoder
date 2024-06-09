@@ -83,6 +83,14 @@ const Header = () => {
                 </Link>
               </li>
               <li>
+                <Link
+                  to="/contests"
+                  className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-primary_text hover:bg-border hover:text-primary"
+                >
+                  Contests
+                </Link>
+              </li>
+              <li>
                 <UserButton afterSignOutUrl="/" userProfileUrl={`/${userId}`} />
               </li>
             </SignedIn>
@@ -124,6 +132,14 @@ const Header = () => {
                 className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
               >
                 Community
+              </Link>
+            </div>
+            <div className="rounded-md shadow">
+              <Link
+                to="/contests"
+                className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
+              >
+                Contests
               </Link>
             </div>
             <div className="rounded-md shadow ml-1">

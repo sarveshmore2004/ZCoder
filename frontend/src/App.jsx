@@ -20,6 +20,7 @@ import NewUserSetup from "./pages/NewUser";
 import { Toaster } from "react-hot-toast";
 import Community from "./pages/Community";
 import EditPost from "./pages/EditPost";
+import ContestsPage from "./pages/ContestsPage";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/sign-up/*" element={<SignUpPage />} />
       <Route path="/new-user" element={<NewUserSetup />} />
       <Route path="/:userid" element={<Profile />} />
+      <Route path="/contests" element={<ContestsPage />} />
       <Route path="/:userid/edit" element={<EditProfile />} />
       <Route path="/community" element={<Community/>}/>
       <Route path="/dashboard">
