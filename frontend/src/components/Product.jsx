@@ -37,7 +37,7 @@ const Product = () => {
               </div>
               <div className="flex justify-center border-t border-base-300">
               <img
-              className=" max-h-80"
+              className=""
               src={firstItem?.img}
               alt={firstItem?.title}
             />

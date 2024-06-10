@@ -28,7 +28,7 @@
       {
         "title": "Personalised Profiles",
         "description": "Craft your unique coding identity and connect with others. Create a profile that showcases your skills, projects, and coding journey. Connect with fellow coders, follow their progress, and get inspired by their achievements.",
-        "img": "/assets/images/product1.jpg"
+        "img": "/assets/images/Profile.jpg"
       },
       {
         "title": "Collaborative Learning",
@@ -41,35 +41,5 @@
         "img": "/assets/images/calendar.png"
       }
     ]
-  },
-
-  "about": {
-    "sections": [
-      {
-        "name": "Something",
-        "href": "#",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
-      },
-      {
-        "name": "Something",
-        "href": "#",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
-      },
-      {
-        "name": "Something",
-        "href": "#",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
-      },
-      {
-        "name": "Something",
-        "href": "#",
-        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
-      }
-    ],
-    "socialMedia": {
-      "github": "",
-      "twitter": "",
-      "linkedin": ""
-    }
   }
 }
