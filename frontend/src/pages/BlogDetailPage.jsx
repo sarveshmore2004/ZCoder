@@ -20,6 +20,7 @@ import useUnfavoriteBlogPost from "../hooks/useUnfavoriteBlogPost";
 import formatDate from "../utils/formatDate";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import toast from "react-hot-toast";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
@@ -39,7 +40,7 @@ const BlogDetailPage = () => {
   const [replyContent, setReplyContent] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const { userId, isLoaded: authLoaded } = useAuth();
-  const { user, loading: userLoading } = useFetchUserById(userId);
+  const { user, loading: userLoading } = useFetchUserById(userId , authLoaded) ;
   const [comments, setComments] = useState([]);
   const [upvoteCount, setUpvoteCount] = useState(0);
   const [downvoteCount, setDownvoteCount] = useState(0);
@@ -74,7 +75,7 @@ const BlogDetailPage = () => {
       }
     }
   }, [userLoading, user, blogPost, postLoading]);
-
+// console.log(authLoaded , userId , userLoading , user, postLoading , blogPost)
   if (postLoading || userLoading) {
     return <Spinner />;
   }
@@ -100,6 +101,9 @@ const BlogDetailPage = () => {
       }
       setCommentContent("");
     }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
   };
 
   const handleReplySubmit = async (e, parentId) => {
@@ -119,6 +123,9 @@ const BlogDetailPage = () => {
         setReplyContent("");
       }
     }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
   };
 
   const handleUpvote = async () => {
@@ -130,6 +137,9 @@ const BlogDetailPage = () => {
         setDownvoteCount(downvoteCount - 1);
         setHasDownvoted(false);
       }
+    }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
     }
   };
 
@@ -143,12 +153,18 @@ const BlogDetailPage = () => {
         setHasUpvoted(false);
       }
     }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
   };
 
   const handleFavorite = async () => {
     if (user && user._id && !isFavorite) {
       await favorite(user._id);
       setIsFavorite(true);
+    }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
     }
   };
 
@@ -157,9 +173,15 @@ const BlogDetailPage = () => {
       await unfavorite(user._id);
       setIsFavorite(false);
     }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
   };
 
   const handleReplyClick = (comment) => {
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
     setReplyingTo(comment._id);
     setReplyContent(`@${comment.author.name} `);
     setTimeout(() => {
@@ -205,6 +227,9 @@ const BlogDetailPage = () => {
         })
       );
     }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
+    }
   };
 
   const handleCommentDownvote = async (commentId, parentId, hasDownvoted) => {
@@ -236,6 +261,9 @@ const BlogDetailPage = () => {
           return comment;
         })
       );
+    }
+    if(!user){
+      toast.error('Please Sign In to Perform Action')
     }
   };
 
@@ -331,7 +359,7 @@ const BlogDetailPage = () => {
                 Hide replies
               </button>
             )}
-            {replyingTo === comment._id && (
+            {replyingTo === comment._id && user && (
               <form
                 onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)}
                 className="mt-4"
@@ -351,6 +379,7 @@ const BlogDetailPage = () => {
                 </button>
               </form>
             )}
+            
             {showReplies[comment._id] && renderComments(comment.replies, comment._id)}
           </div>
         </div>
