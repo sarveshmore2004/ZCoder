@@ -6,16 +6,19 @@ import { FaPlus } from "react-icons/fa";
 import useUpdateUser from "../hooks/useUpdateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import Spinner from "../components/spinner.jsx";
+import { FcEditImage } from "react-icons/fc";
+import toast from "react-hot-toast";
 
 const EditProfile = () => {
-  const { user: clerkUser } = useUser();
+  const { user: clerkUser , isLoaded:userLoaded} = useUser();
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const { user: fetchedUser, loading } = useFetchUserById(userid, true);
   const { user: updatedUser, updateUser } = useUpdateUser(userid);
-
+  const [profilePicLoading , setProfilePicLoading] = useState(false)
+  
   useEffect(() => {
     if (isLoaded && userId !== userid) {
       setShowError(true);
@@ -29,6 +32,7 @@ const EditProfile = () => {
         ...user,
         name: fetchedUser.name || "",
         bio: fetchedUser.bio || "",
+        avatar: fetchedUser.avatar || "",
         codingProfiles: fetchedUser.codingProfiles || {
           leetcode: "",
           codeforces: "",
@@ -47,6 +51,7 @@ const EditProfile = () => {
   const [user, setUser] = useState({
     name: "",
     bio: "",
+    avatar:"",
     codingProfiles: {
       leetcode: "",
       codeforces: "",
@@ -119,9 +124,17 @@ const EditProfile = () => {
 
     const reader = new FileReader();
     reader.onloadend = async () => {
+      setProfilePicLoading(true);
       const base64String = reader.result;
-      await clerkUser.setProfileImage({ file: base64String });
-      await clerkUser.reload();
+      await clerkUser?.setProfileImage({ file: base64String });
+      await clerkUser?.reload();
+      setUser((prevState) => ({
+        ...prevState,
+        avatar: clerkUser?.imageUrl,
+      }));
+      console.log(user)
+      setProfilePicLoading(false);
+      toast.success('Profile Pic Updated')
     };
     reader.readAsDataURL(file);
   };
@@ -132,7 +145,7 @@ const EditProfile = () => {
     await updateUser(user);
     navigate(`/${userid}`);
   };
-
+console.log(user)
   return (
     <>
       {(!isLoaded || loading) && <Spinner />}
@@ -157,12 +170,16 @@ const EditProfile = () => {
                     <label className="flex flex-col items-center">
                       <span className="text-primary_text mb-2">Profile Image</span>
                       <input type="file" onChange={handleImageUpload} className="hidden" />
+                      {profilePicLoading && <p className="text-primary">Uploading...</p>  }
                       {clerkUser?.imageUrl && (
+                        <div className="relative ">
                         <img
                           src={clerkUser?.imageUrl}
                           alt="Profile"
-                          className="w-24 h-24 object-cover rounded-full cursor-pointer"
+                          className="w-28 h-28 object-cover rounded-full cursor-pointer"
                         />
+                        <FcEditImage className="absolute right-0 top-0 cursor-pointer"/>
+                        </div>
                       )}
                     </label>
                   </div>
