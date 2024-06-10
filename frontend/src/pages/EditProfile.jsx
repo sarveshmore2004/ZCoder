@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
-import { FaPlus } from "react-icons/fa"; // Importing the plus icon
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { FaPlus } from "react-icons/fa";
 import useUpdateUser from "../hooks/useUpdateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import Spinner from "../components/spinner.jsx";
 
 const EditProfile = () => {
+  const { user: clerkUser } = useUser();
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
   const navigate = useNavigate();
@@ -58,7 +59,6 @@ const EditProfile = () => {
     },
     knownLanguages: [],
   });
-  // console.log(fetchedUser);
 
   const [newLanguage, setNewLanguage] = useState("");
 
@@ -113,6 +113,19 @@ const EditProfile = () => {
     navigate(-1);
   };
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      await clerkUser.setProfileImage({ file: base64String });
+      await clerkUser.reload();
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(user);
@@ -140,6 +153,19 @@ const EditProfile = () => {
               )}
               {!showError && (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <label className="flex flex-col items-center">
+                      <span className="text-primary_text mb-2">Profile Image</span>
+                      <input type="file" onChange={handleImageUpload} className="hidden" />
+                      {clerkUser?.imageUrl && (
+                        <img
+                          src={clerkUser?.imageUrl}
+                          alt="Profile"
+                          className="w-24 h-24 object-cover rounded-full cursor-pointer"
+                        />
+                      )}
+                    </label>
+                  </div>
                   <div className="mb-4">
                     <label
                       className="block text-secondary_text mb-2"
