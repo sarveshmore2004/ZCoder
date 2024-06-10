@@ -4,6 +4,8 @@ import { FiMessageCircle, FiBookmark } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { MdThumbUp, MdThumbDown } from "react-icons/md";
+import { AiOutlineRobot } from "react-icons/ai";
+
 import Header from "../components/Header";
 import Spinner from "../components/spinner";
 import useFetchBlogPostbyId from "../hooks/useFetchBlogPostbyId";
@@ -21,6 +23,7 @@ import formatDate from "../utils/formatDate";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import toast from "react-hot-toast";
+import useExplainComment from "../hooks/useExplainComment";
 
 const BlogDetailPage = () => {
   const { id } = useParams();
@@ -51,6 +54,13 @@ const BlogDetailPage = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showReplies, setShowReplies] = useState({});
   const replyTextareaRef = useRef(null);
+  const { explainComment, loading: explainLoading, explanation, error } = useExplainComment(); 
+  const [explanations, setExplanations] = useState({});
+  const [loadingStates, setLoadingStates] = useState({});
+
+  const [postExplanation, setPostExplanation] = useState(null);
+  const [postExplanationLoading, setPostExplanationLoading] = useState(false);
+
 
   useEffect(() => {
     if (!postLoading && blogPost) {
@@ -274,6 +284,7 @@ const BlogDetailPage = () => {
     }));
   };
 
+  
   const renderContentWithHighlighting = (content) => {
     const lines = content.split("\n");
     const codeBlockPattern = /^```(\w+)?\s*$/;
@@ -281,7 +292,7 @@ const BlogDetailPage = () => {
     let language = "";
     let currentCodeBlock = [];
     const result = [];
-
+  
     lines.forEach((line, index) => {
       const match = line.match(codeBlockPattern);
       if (match) {
@@ -300,10 +311,21 @@ const BlogDetailPage = () => {
       } else if (inCodeBlock) {
         currentCodeBlock.push(line);
       } else {
-        result.push(<p key={`line-${index}`}>{line}</p>);
+        // Inline formatting
+        let formattedLine = line;
+        // Bold
+        formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        // Italics
+        formattedLine = formattedLine.replace(/\*(.*?)\*/g, "<em>$1</em>");
+        // Inline code
+        formattedLine = formattedLine.replace(/`([^`]+)`/g, "<code>$1</code>");
+  
+        result.push(
+          <p key={`line-${index}`} dangerouslySetInnerHTML={{ __html: formattedLine }} />
+        );
       }
     });
-
+  
     if (currentCodeBlock.length > 0) {
       result.push(
         <SyntaxHighlighter language={language} style={darcula} key={`codeblock-${lines.length}`}>
@@ -311,15 +333,83 @@ const BlogDetailPage = () => {
         </SyntaxHighlighter>
       );
     }
-
+  
     return result;
   };
+  
+  const handleExplainPost = async () => {
+    setPostExplanationLoading(true);
+
+    const prompt = `
+      Blog Post Title: ${blogPost.title}
+
+      Blog Post Content:
+      ${blogPost.content}
+
+      Please provide a detailed explanation of the blog post content. Focus on the key points and coding-related aspects. Follow these formatting rules:
+
+      - Use \`\`\`language_name\ncode_here\n\`\`\` for code blocks.
+      - Use \`inline_code\` for inline code.
+      - Use **bold** for bold text.
+      - Use *italics* for italics.
+
+      Common language_name for code blocks are: javascript, python, java, csharp, php, ruby, go, c, cpp, html, css, sql, bash, json.
+      Ensure to cover the overall message, technical details, and any specific coding examples.
+    `;
+
+    try {
+      const newExplanation = await explainComment(prompt); // Replace with your actual API call
+      setPostExplanation(newExplanation);
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setPostExplanationLoading(false);
+    }
+};
+
+
+const handleExplainComment = async (commentId, commentText, blogPostTitle, blogPostContent) => {
+  setLoadingStates((prev) => ({ ...prev, [commentId]: true }));
+
+  const prompt = `
+    Blog Post Title: ${blogPostTitle}
+
+    Blog Post Content:
+    ${blogPostContent}
+
+    Comment:
+    ${commentText}
+
+    Please provide a detailed explanation based on the context of the blog post and the comment. Focus on coding-related aspects, such as explaining code snippets or identifying potential mistakes. If the comment offers insights, solutions, or technical analysis related to the code or the topic discussed, elaborate on it. Provide code snippets where relevant, using the following formatting rules:
+
+    - Use \`\`\`language_name\ncode_here\n\`\`\` for code blocks.
+    - Use \`inline_code\` for inline code.
+    - Use **bold** for bold text.
+    - Use *italics* for italics.
+
+    Common language_name for code blocks are: javascript, python, java, csharp, php, ruby, go, c, cpp, html, css, sql, bash, json.
+
+    If the comment does not contain technical details, provide a brief response that addresses the main points of the comment.
+  `;
+
+  try {
+    const newExplanation = await explainComment(prompt); // Replace with your actual API call
+    console.log(newExplanation);
+    setExplanations((prev) => ({ ...prev, [commentId]: newExplanation }));
+  } catch (error) {
+    toast.error(error);
+  } finally {
+    setLoadingStates((prev) => ({ ...prev, [commentId]: false }));
+  }
+};
+
+  console.log(explanation , explanations , loadingStates)
 
   const renderComments = (comments, parentId = id) => {
     return comments
       .filter((comment) => comment.parentId === parentId)
       .map((comment) => (
-        <div key={comment._id} className="p-4 mb-4 bg-primary/5 drop-shadow-xl rounded-lg">
+        <div key={comment._id} className="relative p-4 mb-4 bg-primary/10 drop-shadow-xl rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <Link to={`/${comment.author.clerkId}`} className="text-primary hover:underline">
@@ -327,6 +417,13 @@ const BlogDetailPage = () => {
               </Link>
               <p className="text-secondary_text text-sm">{formatDate(comment.date)}</p>
             </div>
+            <button
+              disabled={explainLoading}
+              onClick={() => handleExplainComment(comment._id, comment.content, blogPost.title, blogPost.content)}
+              className="flex items-center text-primary_text btn bg-background underline hover:bg-primary ml-2"
+            >
+              <AiOutlineRobot className="mr-1" /> <p>Explain</p>
+            </button>
           </div>
           <div className="text-primary_text mt-2">{renderContentWithHighlighting(comment.content)}</div>
           <div className="flex items-center mt-2 text-secondary_text">
@@ -348,6 +445,18 @@ const BlogDetailPage = () => {
               Reply
             </button>
           </div>
+          {loadingStates[comment._id] && <p className=" text-primary_text  text-center bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1" >Loading explanation...</p>}
+          {explanations[comment._id] && (
+            <div className="bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">
+              <strong>Explanation:</strong> {renderContentWithHighlighting(explanations[comment._id])}
+              <button
+                onClick={() => setExplanations({ ...explanations, [comment._id]: null })}
+                className="flex items-center text-primary underline ml-2 mt-2"
+              >
+                Close Explanation
+              </button>
+            </div>
+          )}
           <div className="ml-8">
             {!showReplies[comment._id] && comment.replies.length > 0 && (
               <button onClick={() => toggleShowReplies(comment._id)} className="text-primary underline mt-2">
@@ -379,12 +488,14 @@ const BlogDetailPage = () => {
                 </button>
               </form>
             )}
-            
             {showReplies[comment._id] && renderComments(comment.replies, comment._id)}
           </div>
         </div>
       ));
   };
+  
+
+
 
   return (
     <>
@@ -460,6 +571,25 @@ const BlogDetailPage = () => {
           </div>
           <div className="mb-8">
             {renderContentWithHighlighting(blogPost.content)}
+            <button
+              disabled={postExplanationLoading}
+              onClick={handleExplainPost}
+              className="flex items-center text-primary_text btn bg-background underline hover:bg-primary mt-4"
+            >
+              <AiOutlineRobot className="mr-1" /> <p>Explain Post</p>
+            </button>
+            {postExplanationLoading && <p className=" text-primary_text  text-center bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">Loading explanation...</p>}
+            {postExplanation && (
+              <div className="bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">
+                <strong>Explanation:</strong> {renderContentWithHighlighting(postExplanation)}
+                <button
+                  onClick={() => setPostExplanation(null)}
+                  className="flex items-center text-primary underline ml-2 mt-2"
+                >
+                  Close Explanation
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Comments</h2>
