@@ -12,7 +12,7 @@
     "title": "Welcome to ZCoder",
     "subtitle": "Empower Your Coding Journey",
     "description": "ZCoder is your ultimate platform for creating personalized coding profiles, bookmarking coding problems, and engaging in collaborative learning through solution comments. Join us to enhance your coding skills in a community-driven environment.",
-    "img": "/assets/images/product1.jpg",
+    "img": "/assets/images/hero_image.png",
     "primaryAction": {
       "text": "Dashboard",
       "to": "/dashboard"
@@ -33,12 +33,12 @@
       {
         "title": "Collaborative Learning",
         "description": "Engage in shared knowledge exchange and feedback on solutions. Comment on others' solutions, share your insights, and learn from the community. Collaborative learning helps you grow faster by leveraging the collective wisdom of the coding community.",
-        "img": "/assets/images/product2.jpg"
+        "img": "/assets/images/collaborative.png"
       },
       {
         "title": "Comprehensive Calendar",
         "description": "Stay updated on upcoming coding contests and events. Our comprehensive calendar keeps you informed about all the important dates, contests, and events in the coding world. Never miss an opportunity to participate and showcase your skills.",
-        "img": "/assets/images/product1.jpg"
+        "img": "/assets/images/calendar.png"
       }
     ]
   },

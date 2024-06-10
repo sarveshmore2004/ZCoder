@@ -32,22 +32,36 @@ const Product = () => {
             <p className={` text-secondary_text`}>{firstItem?.description}</p>
           </div>
           <div className={` w-full sm:w-1/2 p-6`}>
-            <img
+          <div className="mockup-browser border border-base-300 bg-primary/20">
+              <div className="mockup-browser-toolbar">
+              </div>
+              <div className="flex justify-center border-t border-base-300">
+              <img
               className=" max-h-80"
               src={firstItem?.img}
               alt={firstItem?.title}
             />
+              </div>
+            </div>
+            
+
           </div>
         </div>
         <div
           className={`flex flex-wrap flex-col-reverse sm:flex-row justify-between mt-10 items-center`}
         >
           <div className={`w-full sm:w-1/2 p-6`}>
-            <img
-              className="max-h-80"
-              src={secondItem?.img}
-              alt={secondItem?.title}
-            />
+            <div className="mockup-browser border border-base-300  bg-primary/20">
+              <div className="mockup-browser-toolbar">
+              </div>
+              <div className="flex justify-center border-t border-base-300">
+                <img
+                className=""
+                src={secondItem?.img}
+                alt={secondItem?.title}
+                />
+              </div>
+            </div>
           </div>
           <div className={`w-full sm:w-1/2 p-6 `}>
             <div className={`align-middle`}>
@@ -72,11 +86,17 @@ const Product = () => {
             <p className={` text-secondary_text`}>{thirdItem?.description}</p>
           </div>
           <div className={` w-full sm:w-1/2 p-6`}>
-            <img
-              className="max-h-80"
-              src={thirdItem?.img}
-              alt={thirdItem?.title}
-            />
+          <div className="mockup-browser border border-base-300 bg-primary/20">
+              <div className="mockup-browser-toolbar">
+              </div>
+              <div className="flex justify-center border-t border-base-300">
+                <img
+                className=""
+                src={thirdItem?.img}
+                alt={thirdItem?.title}
+              />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -12,6 +12,10 @@ a {
   @apply text-red-700;
 }
 
+body{
+  @apply bg-background
+}
+
 ::-webkit-scrollbar {
   width: 0;  /* Remove scrollbar space */
   height: 0;

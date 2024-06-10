@@ -15,6 +15,7 @@ const getDomainFromUrl = (url) => {
   }
 };
 
+
 const AddPostPage = () => {
   const navigate = useNavigate();
 
@@ -132,7 +133,7 @@ const AddPostPage = () => {
                 <button
                   type="button"
                   onClick={insertCodeSnippet}
-                  className="ml-2 bg-primary text-primary_text hover:bg-border text-sm hover:text-primary px-2 py-2 rounded-lg"
+                  className="ml-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-2 py-2 text-sm rounded-lg flex items-center"
                 >
                   <FaCode />AddCode
                 </button>
