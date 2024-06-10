@@ -12,7 +12,7 @@ const EditProfile = () => {
   const { userid } = useParams();
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
-  const { user: fetchedUser, loading } = useFetchUserById(userid);
+  const { user: fetchedUser, loading } = useFetchUserById(userid, true);
   const { user: updatedUser, updateUser } = useUpdateUser(userid);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ const Profile = () => {
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
 
-  const { user, loading } = useFetchUserById(userid);
+  const { user, loading } = useFetchUserById(userid, true);
 
   const handleEdit = () => {
     navigate(`/${userId}/edit`);

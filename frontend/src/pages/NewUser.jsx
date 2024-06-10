@@ -8,7 +8,7 @@ import Spinner from "../components/spinner.jsx";
 
 const NewUserSetup = () => {
   const { userId, isLoaded } = useAuth();
-  const { user, loading } = useFetchUserById(userId);
+  const { user, loading } = useFetchUserById(userId, isLoaded);
   const { createUser, loading: creatingUser } = useCreateUser();
   const navigate = useNavigate();
 

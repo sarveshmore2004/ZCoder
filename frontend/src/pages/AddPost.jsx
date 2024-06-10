@@ -27,7 +27,7 @@ const AddPostPage = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [problemLink, setProblemLink] = useState("");
 
-  const { user } = useFetchUserById(userId);
+  const { user } = useFetchUserById(userId, isLoaded);
   const { createBlogPost } = useCreateBlogPost();
 
   const contentTextareaRef = useRef(null);
