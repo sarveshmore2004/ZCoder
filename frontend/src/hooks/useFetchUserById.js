@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const useFetchUserById = (clerkId) => {
+
+  if (!clerkId) return {user:null, loading:false};
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -148,6 +148,7 @@ const EditProfile = () => {
                       Name
                     </label>
                     <input
+                      autoFocus
                       type="text"
                       id="name"
                       name="name"

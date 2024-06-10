@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { useAuth } from "@clerk/clerk-react";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaCode, FaPaperPlane } from "react-icons/fa";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import useCreateBlogPost from "../hooks/useCreateBlogPost.js";
 
@@ -30,10 +30,12 @@ const AddPostPage = () => {
   const { user } = useFetchUserById(userId);
   const { createBlogPost } = useCreateBlogPost();
 
+  const contentTextareaRef = useRef(null);
+
   useEffect(() => {
     if (!isLoaded) return;
     if (!userId) navigate("/sign-in");
-  }, [ isLoaded, navigate]);
+  }, [isLoaded, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,6 +72,29 @@ const AddPostPage = () => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
+  const adjustTextareaHeight = (event) => {
+    const textarea = event.target;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
+  const insertCodeSnippet = () => {
+    const textarea = contentTextareaRef.current;
+    const codeSnippet = "\n```Language_Name\nCode Here\n```\n";
+    const startPos = textarea.selectionStart;
+    const endPos = textarea.selectionEnd;
+    const newValue = content.substring(0, startPos) + codeSnippet + content.substring(endPos);
+    setContent(newValue);
+
+    // Set cursor position after the code snippet
+    setTimeout(() => {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+      textarea.selectionStart = textarea.selectionEnd = startPos + 4;
+      textarea.focus();
+    }, 0);
+  };
+
   return (
     <>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
@@ -87,6 +112,7 @@ const AddPostPage = () => {
                 Title
               </label>
               <input
+                autoFocus
                 id="title"
                 type="text"
                 value={title}
@@ -96,18 +122,30 @@ const AddPostPage = () => {
               />
             </div>
             <div>
-              <label
-                className="block text-primary_text font-bold mb-2"
-                htmlFor="content"
-              >
-                Content
-              </label>
+              <div className="flex items-center mb-2">
+                <label
+                  className="block text-primary_text font-bold"
+                  htmlFor="content"
+                >
+                  Content
+                </label>
+                <button
+                  type="button"
+                  onClick={insertCodeSnippet}
+                  className="ml-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-2 py-2 rounded-lg"
+                >
+                  <FaCode />
+                </button>
+              </div>
               <textarea
                 id="content"
+                ref={contentTextareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full p-2 border rounded-lg"
+                className="w-full p-2 border rounded-lg text-sm"
                 rows="10"
+                onInput={adjustTextareaHeight}
+                placeholder="Write your content here. You can add code snippets by clicking the code icon."
                 required
               />
             </div>
