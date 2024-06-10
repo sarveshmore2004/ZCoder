@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { FaPlus } from "react-icons/fa";
 import useCreateUser from "../hooks/useCreateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import Spinner from "../components/spinner.jsx";
+import { FcEditImage } from "react-icons/fc";
+import toast from "react-hot-toast";
 
 const NewUserSetup = () => {
   const { userId, isLoaded } = useAuth();
+  const { user: clerkUser , isLoaded:userLoaded } = useUser();
   const { user, loading } = useFetchUserById(userId, isLoaded);
   const { createUser, loading: creatingUser } = useCreateUser();
   const navigate = useNavigate();
+  const [profilePicLoading , setProfilePicLoading] = useState(false)
 
   const [formData, setFormData] = useState({
-    clerkId: userId, 
+    clerkId: userId,
     name: "",
     bio: "",
+    avatar: "",
     codingProfiles: {
       leetcode: "",
       codeforces: "",
@@ -36,6 +41,15 @@ const NewUserSetup = () => {
       navigate("/dashboard");
     }
   }, [isLoaded, loading, user, navigate]);
+
+  useEffect(() => {
+    if (userLoaded && clerkUser) {
+      setFormData((prevState) => ({
+        ...prevState,
+        avatar: clerkUser?.imageUrl,
+      }));
+    }
+  }, [clerkUser , userLoaded]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,6 +98,60 @@ const NewUserSetup = () => {
     }));
   };
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      setProfilePicLoading(true);
+      const base64String = reader.result;
+  
+      // Create an image element
+      const img = new Image();
+      img.onload = async () => {
+        const maxWidth = 640;
+        const maxHeight = 640;
+  
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height *= maxWidth / width));
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width *= maxHeight / height));
+            height = maxHeight;
+          }
+        }
+  
+        // Create a canvas element to draw the scaled image
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+  
+        // Convert the canvas image back to a base64 string
+        const scaledBase64String = canvas.toDataURL(file.type);
+  
+        await clerkUser?.setProfileImage({ file: scaledBase64String });
+        await clerkUser?.reload();
+        setFormData((prevState) => ({
+          ...prevState,
+          avatar: clerkUser?.imageUrl,
+        }));
+        console.log(user)
+        setProfilePicLoading(false);
+        toast.success('Profile Pic Updated');
+      };
+      img.src = base64String;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
@@ -110,6 +178,23 @@ const NewUserSetup = () => {
               Set Up Your Profile
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="flex items-center space-x-4 mb-4">
+                <label className="flex flex-col items-center">
+                  <span className="text-primary_text mb-2">Profile Image</span>
+                  <input type="file" onChange={handleImageUpload} className="hidden" />
+                  {profilePicLoading && <p className="text-primary">Uploading...</p>  }
+                  {clerkUser?.imageUrl && (
+                    <div className="relative ">
+                    <img
+                      src={clerkUser?.imageUrl}
+                      alt="Profile"
+                      className="w-28 h-28 object-cover rounded-full cursor-pointer"
+                    />
+                    <FcEditImage className="absolute right-0 top-0 cursor-pointer"/>
+                    </div>
+                  )}
+                </label>
+              </div>
               <div className="mb-4">
                 <label className="block text-secondary_text mb-2" htmlFor="name">
                   Name

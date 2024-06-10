@@ -49,7 +49,7 @@ const Profile = () => {
           <div className="w-full lg:w-1/4 bg-background p-4 rounded-lg shadow-lg">
             <div className="flex flex-col items-center">
               <img
-                className="rounded-full w-24 h-24 mb-4"
+                className="rounded-full w-28 h-28 object-cover mb-4"
                 src={user.avatar}
                 alt={user.name}
               />

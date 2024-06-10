@@ -121,23 +121,77 @@ const EditProfile = () => {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     const reader = new FileReader();
     reader.onloadend = async () => {
       setProfilePicLoading(true);
       const base64String = reader.result;
-      await clerkUser?.setProfileImage({ file: base64String });
-      await clerkUser?.reload();
-      setUser((prevState) => ({
-        ...prevState,
-        avatar: clerkUser?.imageUrl,
-      }));
-      console.log(user)
-      setProfilePicLoading(false);
-      toast.success('Profile Pic Updated')
+  
+      // Create an image element
+      const img = new Image();
+      img.onload = async () => {
+        const maxWidth = 300;
+        const maxHeight = 300;
+  
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height *= maxWidth / width));
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width *= maxHeight / height));
+            height = maxHeight;
+          }
+        }
+  
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+  
+        // Convert the canvas image back to a base64 string
+        const scaledBase64String = canvas.toDataURL(file.type);
+  
+        await clerkUser?.setProfileImage({ file: scaledBase64String });
+        await clerkUser?.reload();
+        setUser((prevState) => ({
+          ...prevState,
+          avatar: clerkUser?.imageUrl,
+        }));
+        console.log(user)
+        setProfilePicLoading(false);
+        toast.success('Profile Pic Updated');
+      };
+      img.src = base64String;
     };
     reader.readAsDataURL(file);
   };
+  
+
+  // const handleImageUpload = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onloadend = async () => {
+  //     setProfilePicLoading(true);
+  //     const base64String = reader.result;
+  //     await clerkUser?.setProfileImage({ file: base64String });
+  //     await clerkUser?.reload();
+  //     setUser((prevState) => ({
+  //       ...prevState,
+  //       avatar: clerkUser?.imageUrl,
+  //     }));
+  //     console.log(user)
+  //     setProfilePicLoading(false);
+  //     toast.success('Profile Pic Updated')
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
