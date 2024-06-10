@@ -13,7 +13,7 @@ const useUpvoteComment = (postId) => {
       });
 
       if (res.ok) {
-        toast.success("Comment upvoted successfully");
+        // toast.success("Comment upvoted successfully");
         const data = await res.json();
         return data;
       } else {

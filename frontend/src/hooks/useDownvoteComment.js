@@ -13,7 +13,7 @@ const useDownvoteComment = (postId) => {
       });
 
       if (res.ok) {
-        toast.success("Comment downvoted successfully");
+        // toast.success("Comment downvoted successfully");
         const data = await res.json();
         return data;
       } else {

@@ -19,7 +19,7 @@ const useFavoriteBlogPost = (postId) => {
       });
 
       if (res.ok) {
-        toast.success('Added to favorites successfully');
+        // toast.success('Added to favorites successfully');
         const data = await res.json();
         return data;
       } else {

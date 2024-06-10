@@ -18,7 +18,7 @@ const useDownvoteBlogPost = (postId) => {
       });
 
       if (res.ok) {
-        toast.success('Downvoted successfully');
+        // toast.success('Downvoted successfully');
         const data = await res.json();
         return data;
       } else {

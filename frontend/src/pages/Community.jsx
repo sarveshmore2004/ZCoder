@@ -45,12 +45,6 @@ const CommunityPage = () => {
                 value={search}
                 onChange={handleSearch}
               />
-              {/* <button
-                type="submit"
-                className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-              >
-                Search
-              </button> */}
             </form>
           </header>
 

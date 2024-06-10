@@ -170,28 +170,6 @@ const EditProfile = () => {
     };
     reader.readAsDataURL(file);
   };
-  
-
-  // const handleImageUpload = async (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   const reader = new FileReader();
-  //   reader.onloadend = async () => {
-  //     setProfilePicLoading(true);
-  //     const base64String = reader.result;
-  //     await clerkUser?.setProfileImage({ file: base64String });
-  //     await clerkUser?.reload();
-  //     setUser((prevState) => ({
-  //       ...prevState,
-  //       avatar: clerkUser?.imageUrl,
-  //     }));
-  //     console.log(user)
-  //     setProfilePicLoading(false);
-  //     toast.success('Profile Pic Updated')
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

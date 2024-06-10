@@ -18,7 +18,7 @@ const useUpvoteBlogPost = (postId) => {
       });
 
       if (res.ok) {
-        toast.success('Upvoted successfully');
+        // toast.success('Upvoted successfully');
         const data = await res.json();
         return data;
       } else {

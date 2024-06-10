@@ -14,10 +14,6 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/blogposts", blogRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello world!!!");
-});
-
 app.listen(PORT, () => {
   connectToMongoDB();
   console.log(`connected to server on port ${PORT}`);

@@ -19,7 +19,7 @@ const useIncrementBlogPostView = (postId) => {
       });
 
       if (res.ok) {
-        toast.success("View incremented successfully");
+        // toast.success("View incremented successfully");
         const data = await res.json();
         return data;
       } else {

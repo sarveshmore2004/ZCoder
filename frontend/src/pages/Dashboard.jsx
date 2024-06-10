@@ -108,13 +108,6 @@ const DashboardPage = () => {
                   <FaPaperPlane />
                 </button>
               </div>
-              {/* <input
-                type="text"
-                className="input input-bordered w-full lg:w-auto"
-                placeholder="All Platforms"
-                value={platformFilter}
-                onChange={handlePlatformChange}
-              /> */}
               <input
                 type="text"
                 className="input input-bordered w-full lg:w-auto"
