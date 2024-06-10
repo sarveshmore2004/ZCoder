@@ -122,7 +122,7 @@ const AddPostPage = () => {
               />
             </div>
             <div>
-              <div className="flex items-center mb-2">
+              <div className="flex items-center justify-between mb-2">
                 <label
                   className="block text-primary_text font-bold"
                   htmlFor="content"
@@ -132,9 +132,9 @@ const AddPostPage = () => {
                 <button
                   type="button"
                   onClick={insertCodeSnippet}
-                  className="ml-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-2 py-2 rounded-lg"
+                  className="ml-2 bg-primary text-primary_text hover:bg-border text-sm hover:text-primary px-2 py-2 rounded-lg"
                 >
-                  <FaCode />
+                  <FaCode />AddCode
                 </button>
               </div>
               <textarea

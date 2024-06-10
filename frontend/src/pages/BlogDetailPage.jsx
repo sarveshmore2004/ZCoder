@@ -287,7 +287,7 @@ const BlogDetailPage = () => {
       if (match) {
         if (inCodeBlock) {
           result.push(
-            <SyntaxHighlighter language={language} style={darcula} key={`codeblock-${index}`}>
+            <SyntaxHighlighter language={language} style={darcula} key={`codeblock-${index}`} showLineNumbers>
               {currentCodeBlock.join("\n")}
             </SyntaxHighlighter>
           );

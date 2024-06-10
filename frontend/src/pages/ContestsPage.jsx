@@ -14,7 +14,8 @@ const ContestsPage = () => {
         const response = await fetch("https://codeforces.com/api/contest.list");
         const data = await response.json();
         if (data.status === "OK") {
-          setContests(data.result);
+          const sortedContests = [...data.result].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
+          setContests(sortedContests);
         }
       } catch (error) {
         console.error("Error fetching contests:", error);
@@ -28,6 +29,7 @@ const ContestsPage = () => {
   }, []);
 
   const filterContests = (type) => {
+    
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const todayEnd = new Date(todayStart);
