@@ -52,6 +52,10 @@ const getUserById = async (req, res) => {
         path: 'favorites',
         options: { sort: {date : -1} }
       })
+      .populate({
+        path: 'notifications',
+        select: 'author postId content parentId'
+      })
       
 
     if (!user) {
@@ -83,3 +87,50 @@ const updateUser = async (req, res) => {
 };
 
 export { getUsers, createUser, getUserById, updateUser };
+
+// Add notification to a user
+const addNotification = async (userId, commentId) => {
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $push: { notifications: commentId },
+      $inc: { noti_count: 1 }
+    });
+  } catch (error) {
+    console.error("Error adding notification:", error.message);
+  }
+};
+
+// Get notifications for a user
+const getNotifications = async (req, res) => {
+  try {
+    const user = await User.findOne({ clerkId: req.params.id })
+    .populate('notifications','author content postId parentId');
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({ notifications: user.notifications, noti_count: user.noti_count });
+  } catch (error) {
+    console.log("Error in getNotifications controller", error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Clear notifications for a user
+const clearNotifications = async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { clerkId:req.params.id },
+      { noti_count: 0 },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("Error in clearNotifications controller", error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export { addNotification, getNotifications, clearNotifications };

@@ -1,18 +1,34 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiBell, FiMenu, FiX } from "react-icons/fi";
 import config from "../config/index.json";
+import useFetchNotifications from "../hooks/useFetchNotifications";
 
 const Header = () => {
-  const { userId } = useAuth();
+  const { userId, isLoaded } = useAuth();
+  const { notifications, notiCount, loading } = useFetchNotifications(userId, isLoaded);
   const { navigation, company, callToAction } = config;
   const { name: companyName, logo } = company;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const clearNotifications = async () => {
+    setIsClearing(true);
+    try {
+      await fetch(`/api/users/${userId}/notifications`, { method: 'PUT' });
+      // Reset the notifications count after clearing
+      // setNotiCount(0);
+    } catch (error) {
+      console.error("Error clearing notifications:", error);
+    } finally {
+      setIsClearing(false);
+    }
   };
 
   return (
@@ -124,7 +140,7 @@ const Header = () => {
             </Link>
           </li>
           <SignedOut>
-          <div className="rounded-md shadow">
+            <div className="rounded-md shadow">
               <Link
                 to="/sign-in"
                 className="w-full flex items-center justify-center px-3 py-2 border ml-1 border-transparent text-sm font-medium rounded-md text-primary_text bg-primary hover:bg-border hover:text-primary md:font-semibold md:py-2 md:text-md md:px-5"
@@ -148,6 +164,27 @@ const Header = () => {
           </SignedIn>
         </ul>
       </div>
+      <details className="flex-none dropdown dropdown-bottom dropdown-open dropdown-end">
+        <summary className="m-1 btn">
+          <FiBell />
+          {notiCount > 0 && <span className="badge badge-error absolute top-0 right-0 px-2 py-1 text-xs font-bold leading-none text-red-100 rounded-full">{notiCount}</span>}
+        </summary>
+        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+          {!loading && notifications.slice(notifications.length - notiCount, notifications.length).map((notification, index) => (
+            <li key={index}>
+              <Link to={`blog/${notification.postId}`}>
+                {notification.author.name}
+                {notification.postId === notification.parentId ? ` Replied to Your Post` : ` Replied to Your Comment`}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <button onClick={clearNotifications} className="btn btn-ghost">
+              {isClearing ? 'Clearing...' : 'Clear Notifications'}
+            </button>
+          </li>
+        </ul>
+      </details>
     </div>
   );
 };

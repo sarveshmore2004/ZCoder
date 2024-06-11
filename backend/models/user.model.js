@@ -24,7 +24,9 @@ const userSchema = new Schema(
       posts: { type: [Schema.Types.ObjectId], ref: "BlogPost", default: [] },
     },
     knownLanguages: { type: [String], default: [] },
-    favorites: [{ type: Schema.Types.ObjectId, ref: "BlogPost" }]
+    favorites: [{ type: Schema.Types.ObjectId, ref: "BlogPost" }],
+    notifications: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
+    noti_count: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 import BlogPost from "../models/blogpost.model.js";
 import Comment from "../models/comment.model.js";
 import User from "../models/user.model.js";
+import { addNotification } from "./users.controller.js";
 
 // Create a new blog post
 export const createBlogPost = async (req, res) => {
@@ -192,12 +193,19 @@ export const addCommentToBlogPost = async (req, res) => {
       parentComment.replies.push(savedComment._id);
       blogPost.commentsCount += 1;
       await Promise.all([parentComment.save(), blogPost.save()]);
-      // await parentComment.save();
-      // await blogPost.save();
+      
+      // If it's a reply, notify the original commenter
+      if (parentComment && parentComment.author.toString() !== author) {
+        await addNotification(parentComment.author, savedComment._id);
+      }
     } else {
       blogPost.comments.push(savedComment._id);
       blogPost.commentsCount += 1;
       await blogPost.save();
+      // Notify the blog post author about the new comment
+      if (blogPost.author.toString() !== author) {
+        await addNotification(blogPost.author, savedComment._id);
+      }
     }
 
     // Update user's comments count and recent activity
@@ -207,13 +215,14 @@ export const addCommentToBlogPost = async (req, res) => {
       user.recentActivity.comments.push(savedComment._id);
       await user.save();
     }
-    
-    const newSavedComment = await savedComment.populate('author')
+
+    const newSavedComment = await savedComment.populate('author');
     res.status(201).json(newSavedComment);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 // Upvote a blog post
