@@ -1,16 +1,18 @@
 import { useState } from "react";
 
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
+
 const useExplainComment = () => {
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState(null);
   const [error, setError] = useState(null);
-    
+  
   const explainComment = async (text) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB47e7XvCYcRTczVnLYfZyONtwl9xT6dQ4", {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
