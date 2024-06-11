@@ -146,7 +146,7 @@ const DashboardPage = () => {
               {blogs.map((blog) => (
                 <div
                   key={blog._id}
-                  className="bg-background p-4 rounded-lg shadow border border-secondary/80"
+                  className="bg-background p-4 rounded-lg shadow-xl border border-secondary/80"
                 >
                   <Link to={`blog/${blog._id}`}>
                     <h3 className="font-bold text-lg text-primary_text hover:underline line-clamp-1">
