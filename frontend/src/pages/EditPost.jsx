@@ -11,9 +11,9 @@ import Spinner from "../components/spinner.jsx";
 const getDomainFromUrl = (url) => {
   try {
     const { hostname } = new URL(url);
-    return hostname.replace('www.', '');
+    return hostname.replace("www.", "");
   } catch (error) {
-    return '';
+    return "";
   }
 };
 
@@ -99,7 +99,8 @@ const EditPost = () => {
     const codeSnippet = "\n```Language_Name\nCode Here\n```\n";
     const startPos = textarea.selectionStart;
     const endPos = textarea.selectionEnd;
-    const newValue = content.substring(0, startPos) + codeSnippet + content.substring(endPos);
+    const newValue =
+      content.substring(0, startPos) + codeSnippet + content.substring(endPos);
     setContent(newValue);
 
     // Set cursor position after the code snippet
@@ -118,8 +119,17 @@ const EditPost = () => {
       </div>
       <div className="min-h-screen bg-background text-primary_text p-4 flex flex-col items-center">
         <div className="w-full lg:w-2/3 bg-background p-4 rounded-lg shadow-lg">
-          <h1 className="text-3xl font-bold mb-4">Edit Post</h1>
-          {!isLoaded || loading && <Spinner />}
+          <div className="flex justify-between items-baseline">
+            <h1 className="text-3xl font-bold mb-4">Edit Post</h1>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="bg-primary/20 text-primary_text hover:bg-primary px-4 py-2 rounded-lg"
+            >
+              Delete Post
+            </button>
+          </div>
+          {!isLoaded || (loading && <Spinner />)}
           {isLoaded && !loading && showError && (
             <div className="bg-primary text-primary_text p-4 rounded mb-6">
               Unauthorized access! Redirecting to the current Post...
@@ -128,13 +138,43 @@ const EditPost = () => {
           {isLoaded && !loading && !showError && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
+                <label className="block text-primary_text font-bold mb-2">
+                  Visibility
+                </label>
+                <div className="flex items-center">
+                  <input
+                    id="public"
+                    type="radio"
+                    name="visibility"
+                    value="public"
+                    checked={isPublic}
+                    onChange={() => setIsPublic(true)}
+                    className="mr-2"
+                  />
+                  <label htmlFor="public" className="mr-4">
+                    Public
+                  </label>
+                  <input
+                    id="private"
+                    type="radio"
+                    name="visibility"
+                    value="private"
+                    checked={!isPublic}
+                    onChange={() => setIsPublic(false)}
+                    className="mr-2"
+                  />
+                  <label htmlFor="private">Private</label>
+                </div>
+              </div>
+              <div>
                 <label
                   className="block text-primary_text font-bold mb-2"
                   htmlFor="title"
                 >
                   Title
                 </label>
-                <input autoFocus
+                <input
+                  autoFocus
                   id="title"
                   type="text"
                   value={title}
@@ -156,7 +196,8 @@ const EditPost = () => {
                     onClick={insertCodeSnippet}
                     className="ml-2 bg-primary text-primary_text hover:bg-border hover:text-primary px-2 py-2 text-sm rounded-lg flex items-center"
                   >
-                    <FaCode />AddCode
+                    <FaCode />
+                    AddCode
                   </button>
                 </div>
                 <textarea
@@ -230,59 +271,23 @@ const EditPost = () => {
                   required
                 />
               </div>
-              <div>
-                <label className="block text-primary_text font-bold mb-2">
-                  Visibility
-                </label>
-                <div className="flex items-center">
-                  <input
-                    id="public"
-                    type="radio"
-                    name="visibility"
-                    value="public"
-                    checked={isPublic}
-                    onChange={() => setIsPublic(true)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="public" className="mr-4">
-                    Public
-                  </label>
-                  <input
-                    id="private"
-                    type="radio"
-                    name="visibility"
-                    value="private"
-                    checked={!isPublic}
-                    onChange={() => setIsPublic(false)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="private">Private</label>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-                  >
-                    Update Post
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/dashboard")}
-                    className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                </div>
+              {/* <div className="flex justify-between items-center"> */}
+              <div className="flex space-x-4 mt-4">
+                <button
+                  type="submit"
+                  className="bg-primary text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
+                >
+                  Update Post
+                </button>
                 <button
                   type="button"
-                  onClick={handleDelete}
-                  className="bg-primary/20 text-primary_text hover:bg-primary px-4 py-2 rounded-lg"
+                  onClick={() => navigate("/dashboard")}
+                  className="bg-primary/10 text-primary_text hover:bg-border hover:text-primary px-4 py-2 rounded-lg"
                 >
-                  Delete
+                  Cancel
                 </button>
               </div>
+              {/* </div> */}
             </form>
           )}
         </div>
