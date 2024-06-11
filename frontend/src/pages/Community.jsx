@@ -60,7 +60,7 @@ const CommunityPage = () => {
                   className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80 flex flex-col items-center hover:bg-primary/20 hover:text-primary transition-all duration-200"
                 >
                   <img
-                    className="rounded-full w-24 h-24 mb-4"
+                    className="rounded-full w-24 h-24 mb-4 object-cover"
                     src={user.avatar}
                     alt={user.name}
                   />

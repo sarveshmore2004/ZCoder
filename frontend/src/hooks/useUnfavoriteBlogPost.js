@@ -19,7 +19,7 @@ const useUnfavoriteBlogPost = (postId) => {
       });
 
       if (res.ok) {
-        // toast.success('Removed from favorites successfully');
+        toast.success('Removed from favorites successfully');
         const data = await res.json();
         return data;
       } else {

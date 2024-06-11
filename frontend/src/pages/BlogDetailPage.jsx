@@ -380,8 +380,8 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
     Comment:
     ${commentText}
 
-    Please provide a detailed explanation based on the context of the blog post and the comment. Focus on coding-related aspects, such as explaining code snippets or identifying potential mistakes. If the comment offers insights, solutions, or technical analysis related to the code or the topic discussed, elaborate on it. Provide code snippets where relevant, using the following formatting rules:
-
+    Please provide a detailed explanation only of the comment using context from blogpost. Focus on coding-related aspects, such as explaining code snippets or identifying potential mistakes. If the comment offers insights, solutions, or technical analysis related to the code or the topic discussed, elaborate on it. Provide code snippets where relevant, using the following formatting rules:
+    If comment contains insight aboout different approach give feedback on that or if approach is feasible give code
     - Use \`\`\`language_name\ncode_here\n\`\`\` for code blocks.
     - Use \`inline_code\` for inline code.
     - Use **bold** for bold text.
@@ -389,8 +389,8 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
 
     Common language_name for code blocks are: javascript, python, java, csharp, php, ruby, go, c, cpp, html, css, sql, bash, json.
 
-    If the comment does not contain technical details, provide a brief response that addresses the main points of the comment.
-  `;
+    If the comment does not contain technical details, provide a very short response and dont explain it.
+    `;
 
   try {
     const newExplanation = await explainComment(prompt); // Replace with your actual API call
@@ -445,7 +445,12 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
               Reply
             </button>
           </div>
-          {loadingStates[comment._id] && <p className=" text-primary_text  text-center bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1" >Loading explanation...</p>}
+          {loadingStates[comment._id] && (
+            <div className="flex items-center justify-center text-primary_text bg-background p-4 mt-2 rounded-lg shadow-xl outline outline-1">
+              <div className="w-5 h-5 border-4 border-primary border-dashed rounded-full animate-spin mr-2"></div>
+              <p>Loading...</p>
+            </div>
+          )}
           {explanations[comment._id] && (
             <div className="bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">
               <strong>Explanation:</strong> {renderContentWithHighlighting(explanations[comment._id])}
@@ -578,7 +583,12 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
             >
               <AiOutlineRobot className="mr-1" /> <p>Explain Post</p>
             </button>
-            {postExplanationLoading && <p className=" text-primary_text  text-center bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">Loading explanation...</p>}
+            {postExplanationLoading && (
+            <div className="flex items-center justify-center text-primary_text bg-background p-4 mt-2 rounded-lg shadow-xl outline outline-1">
+              <div className="w-5 h-5 border-4 border-primary border-dashed rounded-full animate-spin mr-2"></div>
+              <p>Loading...</p>
+            </div>
+          )}
             {postExplanation && (
               <div className="bg-background p-4 mt-2 rounded-lg drop-shadow-xl outline outline-1">
                 <strong>Explanation:</strong> {renderContentWithHighlighting(postExplanation)}

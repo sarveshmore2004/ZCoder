@@ -1,18 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  FiMessageCircle,
-  FiArrowUp,
-  FiArrowDown,
-} from "react-icons/fi";
-import {
-  FaHome,
-  FaQuestionCircle,
-  FaTags,
-  FaUsers,
-  FaPlus,
-  FaEye,
-  FaPaperPlane,
-} from "react-icons/fa";
+import { FiMessageCircle, FiArrowUp, FiArrowDown } from "react-icons/fi";
+import { FaPlus, FaEye, FaPaperPlane } from "react-icons/fa";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import useFetchBlogPosts from "../hooks/useFetchBlogPosts";
@@ -27,7 +15,7 @@ const DashboardPage = () => {
   const [platformFilter, setPlatformFilter] = useState("");
   const [problemLink, setProblemLink] = useState("");
   const [page, setPage] = useState(1);
-  const { blogPosts: blogs, loading, totalPages } = useFetchBlogPosts(sortMethod, page, 5, tags, platformFilter, problemLink);
+  const { blogPosts: blogs, loading, totalPages } = useFetchBlogPosts(sortMethod, page, 16, tags, platformFilter, problemLink);
   const { userId } = useAuth();
   const [loadingFirstTime, setLoadingFirstTime] = useState(true);
 
@@ -54,11 +42,6 @@ const DashboardPage = () => {
   const handleTagRemove = (index) => {
     setPage(1);
     setTags(tags.filter((_, i) => i !== index));
-  };
-
-  const handlePlatformChange = (e) => {
-    setPage(1);
-    setPlatformFilter(e.target.value);
   };
 
   const handleProblemLinkChange = (e) => {
