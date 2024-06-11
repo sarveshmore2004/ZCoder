@@ -116,10 +116,10 @@ const BlogDetailPage = () => {
     }
   };
 
-  const handleReplySubmit = async (e, parentId) => {
+  const handleReplySubmit = async (e, parentId , replyingToId) => {
     e.preventDefault();
     if (user && user._id && parentId) {
-      const newReply = await addComment(replyContent, user._id, parentId);
+      const newReply = await addComment(replyContent, user._id, parentId , replyingToId);
       if (newReply) {
         setComments(
           comments.map((comment) => {
@@ -394,7 +394,7 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
 
   try {
     const newExplanation = await explainComment(prompt); // Replace with your actual API call
-    console.log(newExplanation);
+    // console.log(newExplanation);
     setExplanations((prev) => ({ ...prev, [commentId]: newExplanation }));
   } catch (error) {
     toast.error(error);
@@ -403,7 +403,7 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
   }
 };
 
-  console.log(explanation , explanations , loadingStates)
+  // console.log(explanation , explanations , loadingStates)
 
   const renderComments = (comments, parentId = id) => {
     return comments
@@ -470,7 +470,7 @@ const handleExplainComment = async (commentId, commentText, blogPostTitle, blogP
             )}
             {replyingTo === comment._id && user && (
               <form
-                onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId)}
+                onSubmit={(e) => handleReplySubmit(e, comment.parentId === id ? comment._id : comment.parentId , comment.parentId === id ? null : comment._id )}
                 className="mt-4"
               >
                 <textarea

@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 const useAddCommentToBlogPost = (postId) => {
   const [loading, setLoading] = useState(false);
 
-  const addComment = async (content, author, parentId = null) => {
+  const addComment = async (content, author, parentId = null , replyingToId = null) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/blogposts/${postId}/comments`, {
@@ -15,7 +15,8 @@ const useAddCommentToBlogPost = (postId) => {
         body: JSON.stringify({
           content,
           author,
-          parentId
+          parentId,
+          replyingToId
         })
       });
 

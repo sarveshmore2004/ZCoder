@@ -92,9 +92,12 @@ export { getUsers, createUser, getUserById, updateUser };
 const addNotification = async (userId, commentId) => {
   try {
     await User.findByIdAndUpdate(userId, {
-      $push: { notifications: commentId },
-      $inc: { noti_count: 1 }
+      // $push: { notifications: commentId },
+      $inc: { noti_count: 1 },
+      $addToSet: { notifications: commentId } 
     });
+
+    console.log("added ", commentId , userId);
   } catch (error) {
     console.error("Error adding notification:", error.message);
   }
@@ -104,7 +107,15 @@ const addNotification = async (userId, commentId) => {
 const getNotifications = async (req, res) => {
   try {
     const user = await User.findOne({ clerkId: req.params.id })
-    .populate('notifications','author content postId parentId');
+    .populate({
+      path: 'notifications',
+      select: 'author content postId parentId date',
+      populate: {
+        path: 'author',
+        select: 'name'
+      }
+    })
+    
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

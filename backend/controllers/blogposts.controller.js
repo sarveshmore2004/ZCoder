@@ -168,7 +168,7 @@ export const deleteBlogPost = async (req, res) => {
 // Add a comment to a blog post
 export const addCommentToBlogPost = async (req, res) => {
   try {
-    const { content, author, parentId } = req.body;
+    const { content, author, parentId , replyingToId } = req.body;
     const blogPostId = req.params.id;
 
     let parentComment;
@@ -176,6 +176,13 @@ export const addCommentToBlogPost = async (req, res) => {
       parentComment = await Comment.findById(parentId);
       if (!parentComment) {
         return res.status(404).json({ message: "Parent comment not found" });
+      }
+    }
+    let replyingComment;
+    if (replyingToId) {
+      replyingComment = await Comment.findById(replyingToId);
+      if (!replyingComment) {
+        return res.status(404).json({ message: "Replying comment not found" });
       }
     }
 
@@ -192,20 +199,25 @@ export const addCommentToBlogPost = async (req, res) => {
     if (parentComment) {
       parentComment.replies.push(savedComment._id);
       blogPost.commentsCount += 1;
-      await Promise.all([parentComment.save(), blogPost.save()]);
       
       // If it's a reply, notify the original commenter
       if (parentComment && parentComment.author.toString() !== author) {
         await addNotification(parentComment.author, savedComment._id);
       }
+
+      if (replyingComment && replyingComment.author.toString() !== author) {
+        await addNotification(replyingComment.author, savedComment._id);
+      }
+      
+      await Promise.all([parentComment.save(), blogPost.save()]);
     } else {
       blogPost.comments.push(savedComment._id);
       blogPost.commentsCount += 1;
-      await blogPost.save();
       // Notify the blog post author about the new comment
       if (blogPost.author.toString() !== author) {
         await addNotification(blogPost.author, savedComment._id);
-      }
+        }
+      await blogPost.save();
     }
 
     // Update user's comments count and recent activity
