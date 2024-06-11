@@ -71,7 +71,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <>
+    <div>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
         <Header />
       </div>
@@ -146,7 +146,7 @@ const DashboardPage = () => {
               {blogs.map((blog) => (
                 <div
                   key={blog._id}
-                  className="bg-background p-4 rounded-lg shadow drop-shadow-xl border border-secondary/80"
+                  className="bg-background p-4 rounded-lg shadow border border-secondary/80"
                 >
                   <Link to={`blog/${blog._id}`}>
                     <h3 className="font-bold text-lg text-primary_text hover:underline line-clamp-1">
@@ -220,7 +220,7 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

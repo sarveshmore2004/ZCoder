@@ -57,7 +57,7 @@ const ContestsPage = () => {
 
   return (
     <>
-      <div className="w-full flex justify-center bg-background drop-shadow-2xl">
+      <div className="w-full flex justify-center bg-background ">
         <Header />
       </div>
       {contests.length===0 && <div>Error fetching contests . Please Try again Later </div> }

@@ -107,7 +107,7 @@ const BlogDetailPage = () => {
     if (user && user._id) {
       const newComment = await addComment(commentContent, user._id);
       if (newComment) {
-        setComments([...comments, newComment]);
+        setComments([newComment, ...comments]);
       }
       setCommentContent("");
     }
