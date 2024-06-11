@@ -5,6 +5,7 @@ import { FiBell, FiMenu, FiX } from "react-icons/fi";
 import config from "../config/index.json";
 import useFetchNotifications from "../hooks/useFetchNotifications";
 import formatDate from "../utils/formatDate";
+
 const Header = () => {
   const { userId, isLoaded } = useAuth();
   const { notifications, notiCount, loading } = useFetchNotifications(userId, isLoaded);
@@ -15,12 +16,12 @@ const Header = () => {
   const [isClearing, setIsClearing] = useState(false);
   const [notificationList, setNotificationList] = useState(notifications);
   const [notificationCount, setNotificationCount] = useState(notiCount);
-
-  const [dropdownOpen ,setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (notifications) {
-      setNotificationList(notifications);
+      const reversedNotifications = notifications.reverse();
+      setNotificationList(reversedNotifications.slice(0, notiCount));
     }
     if (notiCount !== undefined) {
       setNotificationCount(notiCount);
@@ -136,40 +137,50 @@ const Header = () => {
         </ul>
       </div>
       <SignedIn>
-        <div className="flex-none dropdown dropdown-bottom dropdown-end">
-          <div tabIndex={0} className="m-1 btn relative" onClick={()=>setDropdownOpen(prev=> !prev)}>
+        <div className="relative">
+          <button className="m-1 btn relative" onClick={() => setDropdownOpen(!dropdownOpen)}>
             <FiBell />
             {notificationCount > 0 && (
-              <span className="badge badge-error absolute top-0 right-0 px-2 py-1 text-xs font-bold leading-none text-red-100 rounded-full">
+              <span className="badge badge-error absolute top-0 right-0 px-2 py-1 text-xs font-bold leading-none text-primary_text rounded-full">
                 {notificationCount}
               </span>
             )}
-          </div>
-          {
-            dropdownOpen && 
-            <ul tabIndex={0} className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80">
-              {!loading  && notificationList && notificationList.slice(notificationList.length - notificationCount, notificationList.length).map((notification, index) => (
-                <li key={index} className="mb-2">
-                  <Link to={`/dashboard/blog/${notification.postId}`} className="flex flex-col">
-                    <span className="font-semibold">{notification.author.name}</span>
-                    <span className="text-sm text-gray-600">{notification.content}</span>
-                    <span className="text-xs text-gray-400">{formatDate(notification.date)}</span>
-                    {notification.postId === notification.parentId ? (
-                      <span className="text-sm">Replied to Your Post</span>
-                    ) : (
-                      <span className="text-sm">Replied to Your Comment</span>
-                    )}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <button onClick={clearNotifications} className="btn btn-ghost w-full">
-                  {isClearing ? 'Clearing...' : 'Clear Notifications'}
+          </button>
+          {dropdownOpen && (
+            <div className="absolute  top-12 right-0 mt-2 w-80 bg-background outline outline-1 shadow-lg rounded-lg z-50">
+              <div className="p-4 border-b">
+                <span className="text-lg font-semibold text-primary">Notifications</span>
+                <button
+                  onClick={clearNotifications}
+                  className="btn btn-sm btn-ghost float-right bg-primary text-primary_text"
+                >
+                  {isClearing ? 'Clearing...' : 'Clear All'}
                 </button>
-              </li>
-            </ul>
-          }
-          
+              </div>
+              <ul className="p-4 max-h-60 overflow-y-auto">
+                {!loading && notificationList && notificationList.length > 0 && (
+                  notificationList.map((notification, index) => (
+                    <li key={index} className="mb-2">
+                      <Link to={`/dashboard/blog/${notification.postId}`} className="block p-2 rounded bg-primary/30 hover:bg-primary/50">
+                        
+                        <span className="font-semibold text-primary_text line-clamp-1">{notification.author.name}</span>
+                        <div className="flex items-center justify-between mb-1">
+                            {notification.postId === notification.parentId ? (
+                            <span className="text-sm text-secondary_text underline">Commented on Your Post</span>
+                          ) : (
+                            <span className="text-sm text-secondary_text underline">Replied to Your Comment</span>
+                          )}
+                          <span className="ml-2 text-xs text-primary_text">{formatDate(notification.date)}</span>
+                        </div>
+                        <p className="text-sm text-primary_text line-clamp-1">{notification.content}</p>
+                      </Link>
+                    </li>
+                  ))
+                )}
+                {notificationCount===0 && <p className="text-center">No new notifications...</p>}
+              </ul>
+            </div>
+          )}
         </div>
       </SignedIn>
     </div>
