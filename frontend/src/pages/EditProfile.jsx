@@ -10,15 +10,21 @@ import { FcEditImage } from "react-icons/fc";
 import toast from "react-hot-toast";
 
 const EditProfile = () => {
-  const { user: clerkUser , isLoaded:userLoaded} = useUser();
+  const { user: clerkUser, isLoaded: userLoaded } = useUser();
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const { user: fetchedUser, loading } = useFetchUserById(userid, true);
   const { user: updatedUser, updateUser } = useUpdateUser(userid);
-  const [profilePicLoading , setProfilePicLoading] = useState(false)
-  
+  const [profilePicLoading, setProfilePicLoading] = useState(false);
+
+  const sanitizeInput = (input) => {
+    const text = document.createElement("textarea");
+    text.innerHTML = input;
+    return text.value;
+  };
+
   useEffect(() => {
     if (isLoaded && userId !== userid) {
       setShowError(true);
@@ -30,8 +36,8 @@ const EditProfile = () => {
     if (fetchedUser) {
       setUser({
         ...user,
-        name: fetchedUser.name || "",
-        bio: fetchedUser.bio || "",
+        name: sanitizeInput(fetchedUser.name) || "",
+        bio: sanitizeInput(fetchedUser.bio) || "",
         avatar: fetchedUser.avatar || "",
         codingProfiles: fetchedUser.codingProfiles || {
           leetcode: "",
@@ -51,7 +57,7 @@ const EditProfile = () => {
   const [user, setUser] = useState({
     name: "",
     bio: "",
-    avatar:"",
+    avatar: "",
     codingProfiles: {
       leetcode: "",
       codeforces: "",
@@ -121,18 +127,18 @@ const EditProfile = () => {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const reader = new FileReader();
     reader.onloadend = async () => {
       setProfilePicLoading(true);
       const base64String = reader.result;
-  
+
       // Create an image element
       const img = new Image();
       img.onload = async () => {
         const maxWidth = 300;
         const maxHeight = 300;
-  
+
         let width = img.width;
         let height = img.height;
         if (width > height) {
@@ -146,25 +152,25 @@ const EditProfile = () => {
             height = maxHeight;
           }
         }
-  
-        const canvas = document.createElement('canvas');
+
+        const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-  
+
         // Convert the canvas image back to a base64 string
         const scaledBase64String = canvas.toDataURL(file.type);
-  
+
         await clerkUser?.setProfileImage({ file: scaledBase64String });
         await clerkUser?.reload();
         setUser((prevState) => ({
           ...prevState,
           avatar: clerkUser?.imageUrl,
         }));
-        console.log(user)
+        console.log(user);
         setProfilePicLoading(false);
-        toast.success('Profile Pic Updated');
+        toast.success("Profile Pic Updated");
       };
       img.src = base64String;
     };
@@ -177,7 +183,7 @@ const EditProfile = () => {
     await updateUser(user);
     navigate(`/${userid}`);
   };
-console.log(user)
+  console.log(user);
   return (
     <>
       {(!isLoaded || loading) && <Spinner />}
@@ -200,17 +206,25 @@ console.log(user)
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="flex items-center space-x-4 mb-4">
                     <label className="flex flex-col items-center">
-                      <span className="text-primary_text mb-2">Profile Image</span>
-                      <input type="file" onChange={handleImageUpload} className="hidden" />
-                      {profilePicLoading && <p className="text-primary">Uploading...</p>  }
+                      <span className="text-primary_text mb-2">
+                        Profile Image
+                      </span>
+                      <input
+                        type="file"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                      {profilePicLoading && (
+                        <p className="text-primary">Uploading...</p>
+                      )}
                       {clerkUser?.imageUrl && (
                         <div className="relative ">
-                        <img
-                          src={clerkUser?.imageUrl}
-                          alt="Profile"
-                          className="w-28 h-28 object-cover rounded-full cursor-pointer"
-                        />
-                        <FcEditImage className="absolute right-0 top-0 cursor-pointer"/>
+                          <img
+                            src={clerkUser?.imageUrl}
+                            alt="Profile"
+                            className="w-28 h-28 object-cover rounded-full cursor-pointer"
+                          />
+                          <FcEditImage className="absolute right-0 top-0 cursor-pointer" />
                         </div>
                       )}
                     </label>

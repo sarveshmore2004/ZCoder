@@ -15,7 +15,18 @@ const DashboardPage = () => {
   const [platformFilter, setPlatformFilter] = useState("");
   const [problemLink, setProblemLink] = useState("");
   const [page, setPage] = useState(1);
-  const { blogPosts: blogs, loading, totalPages } = useFetchBlogPosts(sortMethod, page, 16, tags, platformFilter, problemLink);
+  const {
+    blogPosts: blogs,
+    loading,
+    totalPages,
+  } = useFetchBlogPosts(
+    sortMethod,
+    page,
+    16,
+    tags,
+    platformFilter,
+    problemLink
+  );
   const { userId } = useAuth();
   const [loadingFirstTime, setLoadingFirstTime] = useState(true);
 
@@ -123,7 +134,9 @@ const DashboardPage = () => {
               </span>
             ))}
           </div>
-          {loading && <div className="self-center w-10 h-10 border-4 border-primary border-dashed rounded-full animate-spin m-2"></div>}
+          {loading && (
+            <div className="self-center w-10 h-10 border-4 border-primary border-dashed rounded-full animate-spin m-2"></div>
+          )}
           <section>
             <div className="space-y-8">
               {blogs.map((blog) => (
@@ -132,9 +145,10 @@ const DashboardPage = () => {
                   className="bg-background p-4 rounded-lg shadow-xl border border-secondary/80"
                 >
                   <Link to={`blog/${blog._id}`}>
-                    <h3 className="font-bold text-lg text-primary_text hover:underline line-clamp-1">
-                      {blog.title}
-                    </h3>
+                    <h3
+                      className="font-bold text-lg text-primary_text hover:underline line-clamp-1"
+                      dangerouslySetInnerHTML={{ __html: blog.title }}
+                    />
                   </Link>
                   <a
                     href={blog.problemLink}
@@ -155,9 +169,16 @@ const DashboardPage = () => {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-secondary_text mt-4">
                     <div className="flex items-center mb-2 sm:mb-0">
                       <Link to={`/${blog.author.clerkId}`}>
-                        <p className="text-secondary_text text-sm hover:underline">
-                          {blog.author.clerkId === userId ? "You" : blog.author.name}
-                        </p>
+                        <p
+                          className="text-secondary_text text-sm hover:underline"
+                          dangerouslySetInnerHTML={{
+                            __html: `${
+                              blog.author.clerkId === userId
+                                ? "You"
+                                : blog.author.name
+                            }`,
+                          }}
+                        />
                       </Link>
                       <p className="text-secondary_text text-sm ml-4">
                         {formatDate(blog.date)}
@@ -192,7 +213,9 @@ const DashboardPage = () => {
             >
               Previous
             </button>
-            <span className="px-4 py-2 mx-1">{`Page ${totalPages === 0 ? '0' : page} of ${totalPages}`}</span>
+            <span className="px-4 py-2 mx-1">{`Page ${
+              totalPages === 0 ? "0" : page
+            } of ${totalPages}`}</span>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages || totalPages === 0}

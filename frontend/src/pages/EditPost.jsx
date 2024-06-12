@@ -40,8 +40,8 @@ const EditPost = () => {
         setShowError(true);
         setTimeout(() => navigate(-1), 2000); // Redirect after 2 seconds
       } else {
-        setTitle(blogPost.title);
-        setContent(blogPost.content);
+        setTitle(sanitizeInput(blogPost.title));
+        setContent(sanitizeInput(blogPost.content));
         setTags(blogPost.tags);
         setIsPublic(blogPost.visibility);
         setProblemLink(blogPost.problemLink);
@@ -110,6 +110,12 @@ const EditPost = () => {
       textarea.selectionStart = textarea.selectionEnd = startPos + 4;
       textarea.focus();
     }, 0);
+  };
+
+  const sanitizeInput = (input) => {
+    const text = document.createElement("textarea");
+    text.innerHTML = input;
+    return text.value;
   };
 
   return (

@@ -10,7 +10,6 @@ import Spinner from "../components/spinner";
 
 const Profile = () => {
   const navigate = useNavigate();
-  // const { user:clerkUser } = useUser();
   const { userId, isLoaded } = useAuth();
   const { userid } = useParams();
 
@@ -35,7 +34,6 @@ const Profile = () => {
       ) || [];
   }
 
-  console.log(user)
   return (
     <>
       <div className="w-full flex justify-center bg-background drop-shadow-2xl">
@@ -53,10 +51,14 @@ const Profile = () => {
                 src={user.avatar}
                 alt={user.name}
               />
-              <h2 className="text-xl font-semibold text-primary_text">
-                {user.name}
-              </h2>
-              <p className="text-secondary_text text-center mt-2">{user.bio}</p>
+              <h2
+                className="text-xl font-semibold text-primary_text"
+                dangerouslySetInnerHTML={{ __html: user.name }}
+              />
+              <p
+                className="text-secondary_text text-center mt-2"
+                dangerouslySetInnerHTML={{ __html: user.bio }}
+              />
               {userId === userid && (
                 <button
                   onClick={handleEdit}
@@ -174,12 +176,11 @@ const Profile = () => {
                     {publicPosts.map((post, index) => (
                       <li key={index} className="mb-4">
                         <div className="flex items-center justify-between text-secondary_text">
-                          <Link
-                            to={`/dashboard/blog/${post._id}`}
-                          >
-                            <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1 ">
-                              {post.title}
-                            </div>
+                          <Link to={`/dashboard/blog/${post._id}`}>
+                            <div
+                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                              dangerouslySetInnerHTML={{ __html: post.title }}
+                            />
                           </Link>
                           <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
                             {formatDate(post.date)}
@@ -214,14 +215,15 @@ const Profile = () => {
                 >
                   <ul>
                     {publicComments.map((comment, index) => (
-                      <li key={index} className="mb-4 ">
-                        <div className="flex items-center justify-between text-secondary_text  ">
-                          <Link
-                            to={`/dashboard/blog/${comment.postId?._id}`}
-                          >
-                            <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1 ">
-                              {comment.content}
-                            </div>
+                      <li key={index} className="mb-4">
+                        <div className="flex items-center justify-between text-secondary_text">
+                          <Link to={`/dashboard/blog/${comment.postId?._id}`}>
+                            <div
+                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                              dangerouslySetInnerHTML={{
+                                __html: comment.content,
+                              }}
+                            />
                           </Link>
                           <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
                             {formatDate(comment.date)}
@@ -260,12 +262,13 @@ const Profile = () => {
                         {favoritePosts.map((post, index) => (
                           <li key={index} className="mb-4">
                             <div className="flex items-center justify-between text-secondary_text">
-                              <Link
-                                to={`/dashboard/blog/${post._id}`}
-                              >
-                                <div className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1 ">
-                                  {post.title}
-                                </div>
+                              <Link to={`/dashboard/blog/${post._id}`}>
+                                <div
+                                  className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                                  dangerouslySetInnerHTML={{
+                                    __html: post.title,
+                                  }}
+                                />
                               </Link>
                               <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
                                 {formatDate(post.date)}

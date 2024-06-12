@@ -8,7 +8,7 @@ const CommunityPage = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
-  const { users, loading, totalPages } = useFetchUsers(search, page , 20);
+  const { users, loading, totalPages } = useFetchUsers(search, page, 20);
   const [loadingFirstTime, setLoadingFirstTime] = useState(true);
 
   const handleSearch = (e) => {
@@ -64,9 +64,11 @@ const CommunityPage = () => {
                     src={user.avatar}
                     alt={user.name}
                   />
-                  <h2 className="text-xl font-semibold text-primary_text line-clamp-1">
-                    {user.name}
-                  </h2>
+                  <h2
+                    className="text-xl font-semibold text-primary_text line-clamp-1"
+                    dangerouslySetInnerHTML={{ __html: user.name }}
+                  />
+
                   <div className="m-2 whitespace-nowrap overflow-scroll">
                     {user.knownLanguages.map((language, index) => (
                       <span
@@ -77,9 +79,10 @@ const CommunityPage = () => {
                       </span>
                     ))}
                   </div>
-                  <div className="text-secondary_text text-center mt-2 line-clamp-1 ">
-                    {user.bio}
-                  </div>
+                  <div
+                    className="text-secondary_text text-center mt-2 line-clamp-1 "
+                    dangerouslySetInnerHTML={{ __html: user.bio }}
+                  />
                 </Link>
               ))}
             </div>
@@ -94,7 +97,9 @@ const CommunityPage = () => {
             >
               Previous
             </button>
-            <span className="px-4 py-2 mx-1">{`Page ${totalPages === 0 ? '0' : page} of ${totalPages}`}</span>
+            <span className="px-4 py-2 mx-1">{`Page ${
+              totalPages === 0 ? "0" : page
+            } of ${totalPages}`}</span>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages || totalPages === 0}
