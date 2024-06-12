@@ -65,11 +65,11 @@ const CommunityPage = () => {
                     alt={user.name}
                   />
                   <h2
-                    className="text-xl font-semibold text-primary_text line-clamp-1"
+                    className="text-xl font-semibold text-primary_text max-w-full truncate"
                     dangerouslySetInnerHTML={{ __html: user.name }}
                   />
 
-                  <div className="m-2 whitespace-nowrap overflow-scroll">
+                  <div className="m-2 whitespace-nowrap max-w-full overflow-scroll">
                     {user.knownLanguages.map((language, index) => (
                       <span
                         key={index}
@@ -80,7 +80,7 @@ const CommunityPage = () => {
                     ))}
                   </div>
                   <div
-                    className="text-secondary_text text-center mt-2 line-clamp-1 "
+                    className="text-secondary_text text-center mt-2 max-w-full truncate "
                     dangerouslySetInnerHTML={{ __html: user.bio }}
                   />
                 </Link>

@@ -52,11 +52,11 @@ const Profile = () => {
                 alt={user.name}
               />
               <h2
-                className="text-xl font-semibold text-primary_text"
+                className="text-xl font-semibold text-primary_text max-w-full break-words"
                 dangerouslySetInnerHTML={{ __html: user.name }}
               />
               <p
-                className="text-secondary_text text-center mt-2"
+                className="text-secondary_text text-center mt-2 max-w-full break-words "
                 dangerouslySetInnerHTML={{ __html: user.bio }}
               />
               {userId === userid && (
@@ -153,13 +153,13 @@ const Profile = () => {
           </div>
 
           {/* Main Content */}
-          <div className="w-full lg:w-3/4 mt-8 lg:mt-0 lg:ml-8 bg-background p-4 rounded-lg shadow-lg">
-            <div className="mt-8">
+          <div className=" w-full lg:w-3/4 mt-8 lg:mt-0 lg:ml-8 bg-background p-4 rounded-lg shadow-lg ">
+            <div className="mt-8 max-w-full">
               <h3 className="text-lg font-semibold mb-4 text-primary_text">
                 Recent Activity
               </h3>
 
-              <div role="tablist" className="tabs tabs-lifted">
+              <div role="tablist" className="tabs tabs-lifted  ">
                 <input
                   type="radio"
                   name="my_tabs_2"
@@ -170,19 +170,22 @@ const Profile = () => {
                 />
                 <div
                   role="tabpanel"
-                  className="tab-content bg-background border-secondary rounded-box p-6"
+                  className="tab-content bg-background border-secondary rounded-box p-6 max-w-full  truncate"
                 >
                   <ul>
                     {publicPosts.map((post, index) => (
-                      <li key={index} className="mb-4">
-                        <div className="flex items-center justify-between text-secondary_text">
-                          <Link to={`/dashboard/blog/${post._id}`}>
+                      <li key={index} className="mb-4 max-w-full ">
+                        <div className="flex items-center justify-between text-secondary_text max-w-full">
+                          <Link
+                            to={`/dashboard/blog/${post._id}`}
+                            className="flex-1  truncate "
+                          >
                             <div
-                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary  "
                               dangerouslySetInnerHTML={{ __html: post.title }}
                             />
                           </Link>
-                          <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
+                          <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                             {formatDate(post.date)}
                             {post.visibility === true ? (
                               <FiUnlock
@@ -211,21 +214,24 @@ const Profile = () => {
                 />
                 <div
                   role="tabpanel"
-                  className="tab-content bg-background border-secondary rounded-box p-6"
+                  className="tab-content bg-background border-secondary rounded-box p-6 max-w-full  truncate"
                 >
                   <ul>
                     {publicComments.map((comment, index) => (
-                      <li key={index} className="mb-4">
-                        <div className="flex items-center justify-between text-secondary_text">
-                          <Link to={`/dashboard/blog/${comment.postId?._id}`}>
+                      <li key={index} className="mb-4 max-w-full ">
+                        <div className="flex items-center justify-between text-secondary_text max-w-full">
+                          <Link
+                            to={`/dashboard/blog/${comment.postId?._id}`}
+                            className="flex-1  truncate "
+                          >
                             <div
-                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                              className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary  "
                               dangerouslySetInnerHTML={{
                                 __html: comment.content,
                               }}
                             />
                           </Link>
-                          <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
+                          <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                             {formatDate(comment.date)}
                             {comment.postId?.visibility === true ? (
                               <FiUnlock
@@ -256,21 +262,24 @@ const Profile = () => {
                     />
                     <div
                       role="tabpanel"
-                      className="tab-content bg-background border-secondary rounded-box p-6"
+                      className="tab-content bg-background border-secondary rounded-box p-6 max-w-full  truncate"
                     >
                       <ul>
                         {favoritePosts.map((post, index) => (
-                          <li key={index} className="mb-4">
-                            <div className="flex items-center justify-between text-secondary_text">
-                              <Link to={`/dashboard/blog/${post._id}`}>
+                          <li key={index} className="mb-4 max-w-full ">
+                            <div className="flex items-center justify-between text-secondary_text max-w-full">
+                              <Link
+                                to={`/dashboard/blog/${post._id}`}
+                                className="flex-1  truncate "
+                              >
                                 <div
-                                  className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary line-clamp-1"
+                                  className="text-primary_text hover:underline text-sm sm:text-base hover:text-primary  "
                                   dangerouslySetInnerHTML={{
                                     __html: post.title,
                                   }}
                                 />
                               </Link>
-                              <span className="ml-2 text-xs flex gap-1 sm:text-sm min-w-28">
+                              <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                                 {formatDate(post.date)}
                                 {post.visibility === true ? (
                                   <FiUnlock

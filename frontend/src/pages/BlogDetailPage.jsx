@@ -357,6 +357,7 @@ const BlogDetailPage = () => {
         result.push(
           <p
             key={`line-${index}`}
+            className=" max-w-full break-words"
             dangerouslySetInnerHTML={{ __html: formattedLine }}
           />
         );
@@ -631,14 +632,14 @@ const BlogDetailPage = () => {
             )}
           </div>
           <h1
-            className="text-3xl font-bold mb-4"
+            className="text-xl lg:3xl font-bold mb-4 max-w-full break-words"
             dangerouslySetInnerHTML={{ __html: blogPost.title }}
           />
-          <div className="flex items-center text-secondary_text mb-4">
+          <div className="flex items-center text-secondary_text mb-4 max-w-full overflow-scroll">
             <pre>by </pre>
             <Link to={`/${blogPost.author.clerkId}`}>
               <p
-                className="text-secondary_text text-sm hover:underline"
+                className="text-secondary_text text-sm hover:underline max-w-1/2 overflow-scroll"
                 dangerouslySetInnerHTML={{
                   __html:
                     blogPost.author.clerkId === userId
@@ -658,7 +659,7 @@ const BlogDetailPage = () => {
               {blogPost.problemLink}
             </a>
           </p>
-          <div className="mb-4">
+          <div className="mb-4 max-w-full overflow-scroll">
             {blogPost.tags.map((tag, index) => (
               <span
                 key={index}
@@ -705,7 +706,7 @@ const BlogDetailPage = () => {
               {isFavorite ? "Unfavorite" : "Favorite"}
             </span>
           </div>
-          <div className="mb-8">
+          <div className="mb-8 ">
             {renderContentWithHighlighting(blogPost.content)}
             <button
               disabled={postExplanationLoading}
