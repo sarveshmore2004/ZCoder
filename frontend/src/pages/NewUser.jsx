@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import useCreateUser from "../hooks/useCreateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import Spinner from "../components/spinner.jsx";
-import { FcEditImage } from "react-icons/fc";
 import toast from "react-hot-toast";
 
 const NewUserSetup = () => {
@@ -15,6 +14,7 @@ const NewUserSetup = () => {
   const { createUser, loading: creatingUser } = useCreateUser();
   const navigate = useNavigate();
   const [profilePicLoading , setProfilePicLoading] = useState(false)
+  const BioTextareaRef = useRef(null);
 
   const [formData, setFormData] = useState({
     clerkId: userId,
@@ -96,6 +96,12 @@ const NewUserSetup = () => {
         (lang) => lang !== language
       ),
     }));
+  };
+
+  const adjustTextareaHeight = (event) => {
+    const textarea = event.target;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   const handleImageUpload = async (event) => {
@@ -190,7 +196,7 @@ const NewUserSetup = () => {
                       alt="Profile"
                       className="w-28 h-28 object-cover rounded-full cursor-pointer"
                     />
-                    <FcEditImage className="absolute right-0 top-0 cursor-pointer"/>
+                      <FaEdit className="text-primary hover:text-primary_text absolute right-0 top-0 cursor-pointer" />
                     </div>
                   )}
                 </label>
@@ -256,9 +262,13 @@ const NewUserSetup = () => {
                 <textarea
                   id="bio"
                   name="bio"
+                  ref={BioTextareaRef}
                   value={formData.bio}
                   onChange={handleChange}
                   className="w-full p-3 border border-secondary rounded-lg"
+                  rows="4"
+                  onInput={adjustTextareaHeight}
+                  placeholder="Write about yourself"
                   required
                 />
               </div>

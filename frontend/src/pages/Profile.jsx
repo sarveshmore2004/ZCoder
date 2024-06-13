@@ -23,6 +23,9 @@ const Profile = () => {
   let publicComments = user?.recentActivity?.comments.toReversed();
   let favoritePosts = user?.favorites;
 
+  publicComments =
+    user?.recentActivity?.comments?.filter((comment) => comment.postId) || [];
+
   if (isLoaded && userId !== userid) {
     publicPosts =
       user?.recentActivity?.posts?.filter((post) => post.visibility === true) ||

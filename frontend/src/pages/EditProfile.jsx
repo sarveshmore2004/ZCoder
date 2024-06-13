@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import useUpdateUser from "../hooks/useUpdateUser.js";
 import useFetchUserById from "../hooks/useFetchUserById.js";
 import Spinner from "../components/spinner.jsx";
-import { FcEditImage } from "react-icons/fc";
 import toast from "react-hot-toast";
 
 const EditProfile = () => {
@@ -18,6 +17,7 @@ const EditProfile = () => {
   const { user: fetchedUser, loading } = useFetchUserById(userid, true);
   const { user: updatedUser, updateUser } = useUpdateUser(userid);
   const [profilePicLoading, setProfilePicLoading] = useState(false);
+  const BioTextareaRef = useRef(null);
 
   const sanitizeInput = (input) => {
     const text = document.createElement("textarea");
@@ -118,6 +118,12 @@ const EditProfile = () => {
         (lang) => lang !== language
       ),
     }));
+  };
+
+  const adjustTextareaHeight = (event) => {
+    const textarea = event.target;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   const handleCancel = () => {
@@ -224,7 +230,7 @@ const EditProfile = () => {
                             alt="Profile"
                             className="w-28 h-28 object-cover rounded-full cursor-pointer"
                           />
-                          <FcEditImage className="absolute right-0 top-0 cursor-pointer" />
+                          <FaEdit className="text-primary hover:text-primary_text absolute right-0 top-0 cursor-pointer" />
                         </div>
                       )}
                     </label>
@@ -295,9 +301,14 @@ const EditProfile = () => {
                     <textarea
                       id="bio"
                       name="bio"
+                      ref={BioTextareaRef}
                       value={user.bio}
                       onChange={handleChange}
                       className="w-full p-3 border border-secondary rounded-lg"
+                      rows="4"
+                      onInput={adjustTextareaHeight}
+                      placeholder="Write about yourself..."
+                      required
                     />
                   </div>
                   <div className="mb-4">
