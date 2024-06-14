@@ -8,9 +8,6 @@ ZCoder is a platform that provides users with the ability to create profiles, bo
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
-- [Usage](#usage)
-- [License](#license)
-- [Contact](#contact)
 
 ## Project Overview
 
@@ -54,8 +51,6 @@ To get a local copy up and running, follow these steps:
 - Node.js and npm installed on your local machine.
 - MongoDB installed and running.
 
-### Usage
-
 ```bash
 git clone git@github.com:sarveshmore2004/ZCoder.git
 cd ZCoder
@@ -68,9 +63,10 @@ cd frontend
 npm install
 ```
 Create a .env.local file and add the following environment variables:
+```
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_GEMINI_API_KEY=your_gemini_api_key
-
+```
 Start the frontend development server.
 ```bash
 npm run dev
@@ -81,10 +77,12 @@ Navigate to the backend directory.
 cd backend
 ```
 Create a .env file and add the following environment variables:
+```
 PORT=your_port_number
 MONGO_URI=your_mongodb_connection_string
+```
 Start the backend server.
 ```bash
 npm start server
 ```
-Visit the landing page at https://localhost:3000
+Visit the Website at http://localhost:3000
