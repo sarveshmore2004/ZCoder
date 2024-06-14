@@ -57,31 +57,31 @@ cd ZCoder
 npm install
 ```
 Frontend Setup
--Navigate to the frontend directory.
+- Navigate to the frontend directory.
 ```bash
 cd frontend
 npm install
 ```
--Create a .env.local file and add the following environment variables:
+- Create a .env.local file and add the following environment variables:
 ```
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_GEMINI_API_KEY=your_gemini_api_key
 ```
--Start the frontend development server.
+- Start the frontend development server.
 ```bash
 npm run dev
 ```
 Backend Setup
--Navigate to the Project root directory.
+- Navigate to the Project root directory.
 ```bash
 cd ..
 ```
--Create a .env file and add the following environment variables:
+- Create a .env file and add the following environment variables:
 ```
 PORT=your_port_number
 MONGO_URI=your_mongodb_connection_string
 ```
--Start the backend server.
+- Start the backend server.
 ```bash
 npm start server
 ```
