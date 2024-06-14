@@ -31,7 +31,7 @@ ZCoder aims to enhance collaborative learning and personalized coding experience
 - **Bookmarking**: Bookmark posts and view them later.
 - **Notification Drawer**: Get notified about comments and replies.
 - **Landing Page**: Introduction to the platform and its features.
-- **Explain Button**: Get explanations for each post and comment using the Gemini Flash 1.5 API.
+- **Explain Button**: Get explanations for each post and comment using the Gemini API.
 - **Edit Posts and Profiles**: Edit your posts and profile information.
 - **Search Posts**: Search for specific posts by keywords.
 - **Add Doubts**: Post your coding-related doubts for others to help solve.
@@ -57,32 +57,31 @@ cd ZCoder
 npm install
 ```
 Frontend Setup
-Navigate to the frontend directory.
+-Navigate to the frontend directory.
 ```bash
 cd frontend
 npm install
 ```
-Create a .env.local file and add the following environment variables:
+-Create a .env.local file and add the following environment variables:
 ```
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_GEMINI_API_KEY=your_gemini_api_key
 ```
-Start the frontend development server.
+-Start the frontend development server.
 ```bash
 npm run dev
 ```
 Backend Setup
-Navigate to the backend directory.
+-Navigate to the Project root directory.
 ```bash
-cd backend
+cd ..
 ```
-Create a .env file and add the following environment variables:
+-Create a .env file and add the following environment variables:
 ```
 PORT=your_port_number
 MONGO_URI=your_mongodb_connection_string
 ```
-Start the backend server.
+-Start the backend server.
 ```bash
 npm start server
 ```
-Visit the Website at http://localhost:3000
