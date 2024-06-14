@@ -382,22 +382,23 @@ const BlogDetailPage = () => {
   const handleExplainPost = async () => {
     setPostExplanationLoading(true);
 
-    const prompt = `
-      Blog Post Title: ${blogPost.title}
+  const prompt = `
+  Blog Post Title: ${blogPost.title}
 
-      Blog Post Content:
-      ${blogPost.content}
+  Blog Post Content:
+  ${blogPost.content}
 
-      Please provide a detailed explanation of the blog post content. Focus on the key points and coding-related aspects. Follow these formatting rules:
+  Please provide a detailed explanation only of the blog post content. Focus on coding-related aspects, such as explaining code snippets or identifying potential mistakes. If the post offers insights, solutions, or technical analysis related to the code or the topic discussed, elaborate on it. Provide code snippets where relevant, using the following formatting rules:
+  - Use \`\`\`language_name\ncode_here\n\`\`\` for code blocks.
+  - Use \`inline_code\` for inline code.
+  - Use **bold** for bold text.
+  - Use *italics* for italics.
 
-      - Use \`\`\`language_name\ncode_here\n\`\`\` for code blocks.
-      - Use \`inline_code\` for inline code.
-      - Use **bold** for bold text.
-      - Use *italics* for italics.
+  Common language_name for code blocks are: javascript, python, java, csharp, php, ruby, go, c, cpp, html, css, sql, bash, json.
 
-      Common language_name for code blocks are: javascript, python, java, csharp, php, ruby, go, c, cpp, html, css, sql, bash, json.
-      Ensure to cover the overall message, technical details, and any specific coding examples.
-    `;
+  If the post does not contain technical details, provide a very short response and don't explain it.
+  `;
+
 
     try {
       const newExplanation = await explainComment(prompt); // Replace with your actual API call
