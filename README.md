@@ -78,7 +78,7 @@ cd ..
 ```
 - Create a .env file and add the following environment variables:
 ```
-PORT=your_port_number
+PORT=5000
 MONGO_URI=your_mongodb_connection_string
 ```
 - Start the backend server.
