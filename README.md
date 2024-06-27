@@ -38,8 +38,8 @@ ZCoder aims to enhance collaborative learning and personalized coding experience
 
 ## Tech Stack
 
-- **Frontend**: ReactJS, Next.js, Clerk (for authentication), Tailwind CSS, DaisyUI
-- **Backend**: Node.js
+- **Frontend**: ReactJS, Clerk (for authentication), Tailwind CSS, DaisyUI
+- **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 
 ## Installation
