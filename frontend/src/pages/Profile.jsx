@@ -188,7 +188,7 @@ const Profile = () => {
                               dangerouslySetInnerHTML={{ __html: post.title }}
                             />
                           </Link>
-                          <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
+                          <span className="ml-2 flex-shrink-0 flex-grow-0 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                             {formatDate(post.date)}
                             {post.visibility === true ? (
                               <FiUnlock
@@ -234,7 +234,7 @@ const Profile = () => {
                               }}
                             />
                           </Link>
-                          <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
+                          <span className="ml-2 flex-shrink-0 flex-grow-0 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                             {formatDate(comment.date)}
                             {comment.postId?.visibility === true ? (
                               <FiUnlock
@@ -282,7 +282,7 @@ const Profile = () => {
                                   }}
                                 />
                               </Link>
-                              <span className="ml-2 flex-shrink-0 flex-grow-0 w-28 text-xs flex flex-nowrap gap-1 sm:text-sm ">
+                              <span className="ml-2 flex-shrink-0 flex-grow-0 text-xs flex flex-nowrap gap-1 sm:text-sm ">
                                 {formatDate(post.date)}
                                 {post.visibility === true ? (
                                   <FiUnlock
