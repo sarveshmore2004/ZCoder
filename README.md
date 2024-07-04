@@ -8,6 +8,7 @@ ZCoder is a platform that provides users with the ability to create profiles, bo
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
+- [Screenshots](#screenshots)
 
 ## Project Overview
 
@@ -85,3 +86,29 @@ MONGO_URI=your_mongodb_connection_string
 ```bash
 npm start server
 ```
+
+## Screenshots
+
+**Profile Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/cd7560a1-d025-410a-8949-2ac9458e917e)
+
+
+**Blogpost Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/40f0c8c2-e8fc-4d65-8a12-4b758beb137a)
+
+
+**Dashboard Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/d6e56640-bafa-48d6-b954-95fbc49e2046)
+
+
+**Contest Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/62160b3b-1377-4883-a0b9-abce45ad1de6)
+
+
+**Community Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/991edc49-d60d-47d6-a8a5-4bf1e1452ea3)
+
+
+## Hosted Server
+
+Link to hosted server: [https://zcoder.onrender.com/](https://zcoder.onrender.com/)
