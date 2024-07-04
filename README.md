@@ -87,6 +87,12 @@ MONGO_URI=your_mongodb_connection_string
 npm start server
 ```
 
+
+## Hosted Server
+
+Link to hosted server: [https://zcoder.onrender.com/](https://zcoder.onrender.com/)
+
+
 ## Screenshots
 
 **Profile Page**
@@ -109,6 +115,15 @@ npm start server
 ![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/991edc49-d60d-47d6-a8a5-4bf1e1452ea3)
 
 
-## Hosted Server
+**Add Post Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/66f1f6e4-4411-439f-b3ba-8306878bb0dd)
 
-Link to hosted server: [https://zcoder.onrender.com/](https://zcoder.onrender.com/)
+
+**Edit Post Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/49a53caf-7443-4b70-bdd3-848dc8f1ec62)
+
+
+**Edit Profile Page**
+![image](https://github.com/sarveshmore2004/ZCoder/assets/118593041/2fcbe16a-c4ef-465d-92a8-ef7416669ae5)
+
+
